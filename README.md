@@ -13,7 +13,7 @@ prepare
 prepare working directory (take note of the '.' in the second line)
 ```
 cd /srv/www
-git clone git@github.com/inyokaproject/docker-setup.git .
+git clone git@github.com:inyokaproject/docker-setup.git .
 git clone git@github.com:inyokaproject/inyoka.git
 git clone git@github.com:inyokaproject/theme-ubuntuusers.git
 ```
