@@ -1,0 +1,44 @@
+version: "3.7"
+services: 
+  inyoka:
+    image: inyokaproject
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    extra_hosts:
+      - "ubuntuusers.local:127.0.0.1"
+      - "forum.ubuntuusers.local:127.0.0.1"
+      - "paste.ubuntuusers.local:127.0.0.1"
+      - "wiki.ubuntuusers.local:127.0.0.1"
+      - "planet.ubuntuusers.local:127.0.0.1"
+      - "ikhaya.ubuntuusers.local:127.0.0.1"
+      - "static.ubuntuusers.local:127.0.0.1"
+      - "media.ubuntuusers.local:127.0.0.1"
+    volumes:
+      - /srv/www/theme-ubuntuusers:/srv/www/theme-ubuntuusers
+      - /srv/www/inyoka:/srv/www/inyoka
+    environment:
+      - INYOKA_ADMIN_PASSWORD=secret
+    entrypoint:
+      - bash
+    command:
+      - /start_inyoka.sh
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: inyoka
+      POSTGRES_USER: inyoka
+      POSTGRES_PASSWORD: inyoka
+  redis:
+    image: redis
+  theme-ubuntuusers:
+    image: inyokaproject
+    entrypoint:
+      - bash
+    command:
+      - /start_grunt.sh
+    volumes:
+      - /srv/www/theme-ubuntuusers:/srv/www/theme-ubuntuusers
