@@ -10,7 +10,7 @@ requirements
 prepare
 -------
 
-prepare working directory (take not of the '.' in the second line)
+prepare working directory (take note of the '.' in the second line)
 ```
 cd /srv/www
 git clone https://github.com/inyokaproject/docker-setup .
