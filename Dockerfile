@@ -17,16 +17,16 @@ RUN virtualenv --python=python2 ~/.venvs/inyoka
 RUN bash -c 'cd /srv/www/inyoka && source ~/.venvs/inyoka/bin/activate && pip install -r extra/requirements/development.txt'
 RUN bash -c 'cd /srv/www/inyoka && source ~/.venvs/inyoka/bin/activate'
 
-COPY start_inyoka.sh /start_inyoka.sh 
+COPY start_inyoka.sh /start_inyoka.sh
 
 ## ---------- prepare theme ---------
 #
 COPY theme-ubuntuusers /srv/www/theme-ubuntuusers
-#                                                                                                      
-RUN bash -c 'cd /srv/www/theme-ubuntuusers && source ~/.venvs/inyoka/bin/activate && python setup.py develop && npm install && ./node_modules/grunt-cli/bin/grunt'                                            
-                                                                                                       
-COPY start_grunt.sh /start_grunt.sh                                                                    
-                                                                                                       
-## ----------------------------------                                                                  
-                                                                                                       
-VOLUME ["/srv/www/inyoka", "/srv/www/theme-ubuntuusers"] 
+#
+RUN bash -c 'cd /srv/www/theme-ubuntuusers && source ~/.venvs/inyoka/bin/activate && python setup.py develop && npm install && ./node_modules/grunt-cli/bin/grunt'
+
+COPY start_grunt.sh /start_grunt.sh
+
+## ----------------------------------
+
+VOLUME ["/srv/www/inyoka", "/srv/www/theme-ubuntuusers"]
