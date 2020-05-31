@@ -1,18 +1,18 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends nodejs-legacy libxml2-dev libxslt1-dev libzmq-dev zlib1g-dev libjpeg-dev uuid-dev libfreetype6-dev libpq-dev build-essential libpq-dev libffi-dev python2.7 libpython2.7-dev wget npm libmagic1
+RUN apt-get install -y --no-install-recommends nodejs libxml2-dev libxslt1-dev zlib1g-dev libjpeg-dev uuid-dev libfreetype6-dev libpq-dev build-essential libpq-dev libffi-dev python2.7 libpython2.7-dev wget npm libmagic1
 
 # ---------- prepare inyoka ---------
 
 COPY inyoka /srv/www/inyoka
 
 RUN wget https://bootstrap.pypa.io/get-pip.py
-RUN python get-pip.py
+RUN python2 get-pip.py
 RUN pip install virtualenv
 
 RUN mkdir -p ~/.venvs/
-RUN virtualenv ~/.venvs/inyoka
+RUN virtualenv --python=python2 ~/.venvs/inyoka
 
 RUN bash -c 'cd /srv/www/inyoka && source ~/.venvs/inyoka/bin/activate && pip install -r extra/requirements/development.txt'
 RUN bash -c 'cd /srv/www/inyoka && source ~/.venvs/inyoka/bin/activate'
