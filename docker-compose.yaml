@@ -1,5 +1,12 @@
 version: "3.7"
 services: 
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: inyoka
+      POSTGRES_USER: inyoka
+      POSTGRES_PASSWORD: inyoka
   inyoka:
     image: inyokaproject
     build:
@@ -25,13 +32,6 @@ services:
       - bash
     command:
       - /start_inyoka.sh
-  postgres:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_DB: inyoka
-      POSTGRES_USER: inyoka
-      POSTGRES_PASSWORD: inyoka
   redis:
     image: redis
   theme-ubuntuusers:
