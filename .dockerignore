@@ -1,0 +1,14 @@
+# inspired from the `.gitignore`s of inyoka and theme-ubuntuusers
+**/.git
+**/dist
+**/*.py[co]
+#inyoka/media/
+#inyoka/static/
+#inyoka/static-collected/
+**/*.db
+**/celerybeat-schedule
+**/htmlcov
+**/.coverage
+**/node_modules
+**/allure-results
+**/bdd_screenshots

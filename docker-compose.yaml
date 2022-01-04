@@ -1,19 +1,24 @@
-version: "3.7"
+version: "3.7" # https://docs.docker.com/compose/compose-file/compose-versioning/
+
 services: 
   postgres:
-    image: postgres
+    image: postgres # TODO: alpine?
     restart: always
     environment:
       POSTGRES_DB: inyoka
       POSTGRES_USER: inyoka
       POSTGRES_PASSWORD: inyoka
+    # TODO: volume
+    #volumes:
+    #  - inyoka-postgres-data:/var/lib/postgresql/data
+
   inyoka:
     image: inyokaproject
     build:
       context: ./
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080/tcp"
     extra_hosts:
       - "ubuntuusers.local:127.0.0.1"
       - "forum.ubuntuusers.local:127.0.0.1"
@@ -24,21 +29,33 @@ services:
       - "static.ubuntuusers.local:127.0.0.1"
       - "media.ubuntuusers.local:127.0.0.1"
     volumes:
-      - /srv/www/theme-ubuntuusers:/srv/www/theme-ubuntuusers
-      - /srv/www/inyoka:/srv/www/inyoka
+      - ./theme-ubuntuusers:/inyoka/theme
+      - ./inyoka:/inyoka/code
     environment:
       - INYOKA_ADMIN_PASSWORD=secret
     entrypoint:
       - bash
-    command:
+    command: # TODO use gunicorn
       - /start_inyoka.sh
+    # TODO depends_on:
+
   redis:
     image: redis
+
+  # TODO
+  # celery-beat
+  # celery
+
+  # TODO: only dev
   theme-ubuntuusers:
     image: inyokaproject
     entrypoint:
       - bash
     command:
-      - /start_grunt.sh
+      - /build_statics.sh
     volumes:
-      - /srv/www/theme-ubuntuusers:/srv/www/theme-ubuntuusers
+      - ./theme-ubuntuusers:/inyoka/theme
+
+# https://docs.docker.com/compose/compose-file/compose-file-v3/#volume-configuration-reference
+#volumes:
+#  inyoka-postgres-data: {}

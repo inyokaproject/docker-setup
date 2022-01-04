@@ -1,32 +1,33 @@
 FROM ubuntu:20.04
+# TODO: FROM python:3.9 # 3.10 not offically supported by django 2.2
+
+# ARG 'is not persisted in the final image' see https://docs.docker.com/engine/reference/builder/#env
+ARG DEBIAN_FRONTEND=noninteractive
+# from https://docs.docker.com/samples/django/
+ARG PYTHONDONTWRITEBYTECODE=1
+ARG PYTHONUNBUFFERED=1
 
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends nodejs libxml2-dev libxslt1-dev zlib1g-dev libjpeg-dev uuid-dev libfreetype6-dev libpq-dev build-essential libpq-dev libffi-dev python2.7 libpython2.7-dev wget npm libmagic1
+RUN apt-get install -y --no-install-recommends nodejs libxml2-dev libxslt1-dev zlib1g-dev libjpeg-dev uuid-dev libfreetype6-dev libpq-dev build-essential libpq-dev libffi-dev python3-dev python3-venv wget npm libmagic1
 
-# ---------- prepare inyoka ---------
 
-COPY inyoka /srv/www/inyoka
+# inyoka
 
-RUN wget https://bootstrap.pypa.io/get-pip.py
-RUN python2 get-pip.py
-RUN pip install virtualenv
+COPY inyoka /inyoka/code
+WORKDIR /inyoka/code
 
-RUN mkdir -p ~/.venvs/
-RUN virtualenv --python=python2 ~/.venvs/inyoka
+RUN python3 -m venv ~/.venvs/inyoka
 
-RUN bash -c 'cd /srv/www/inyoka && source ~/.venvs/inyoka/bin/activate && pip install -r extra/requirements/development.txt'
-RUN bash -c 'cd /srv/www/inyoka && source ~/.venvs/inyoka/bin/activate'
+RUN ~/.venvs/inyoka/bin/pip install --upgrade pip
+RUN ~/.venvs/inyoka/bin/pip install --require-hashes --no-cache-dir -r extra/requirements/development.txt
 
-COPY start_inyoka.sh /start_inyoka.sh
+COPY start_inyoka.sh /
 
-## ---------- prepare theme ---------
-#
-COPY theme-ubuntuusers /srv/www/theme-ubuntuusers
-#
-RUN bash -c 'cd /srv/www/theme-ubuntuusers && source ~/.venvs/inyoka/bin/activate && python setup.py develop && npm install && ./node_modules/grunt-cli/bin/grunt'
 
-COPY start_grunt.sh /start_grunt.sh
+# theme
 
-## ----------------------------------
+COPY theme-ubuntuusers /inyoka/theme
 
-VOLUME ["/srv/www/inyoka", "/srv/www/theme-ubuntuusers"]
+RUN sh -c 'cd /inyoka/theme && ~/.venvs/inyoka/bin/python setup.py develop'
+
+COPY build_statics.sh /
