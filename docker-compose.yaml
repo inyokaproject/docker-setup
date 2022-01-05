@@ -13,6 +13,9 @@ services:
       POSTGRES_PASSWORD: inyoka
     # increase shared memory like recommended at https://github.com/docker-library/docs/blob/master/postgres/README.md#caveats
     shm_size: 256M
+    # https://github.com/docker-library/postgres/blob/a83005b407ee6d810413500d8a041c957fb10cf0/14/bullseye/Dockerfile#L211-L213
+    # https://www.postgresql.org/docs/14/server-start.html suggests no timeout
+    stop_grace_period: 5m
     # TODO: volume
     volumes:
       - inyoka-postgres-data:/var/lib/postgresql/data
