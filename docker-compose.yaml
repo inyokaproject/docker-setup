@@ -2,7 +2,10 @@ version: "3.7" # https://docs.docker.com/compose/compose-file/compose-versioning
 
 services: 
   postgres:
-    image: postgres # TODO: alpine?
+    # pin postgres major version to prevent unexpected database migrations
+    # debian image is used, as alpine can have problems with locals
+    # see https://github.com/docker-library/docs/blob/master/postgres/README.md#locale-customization
+    image: postgres:14-bullseye
     restart: always
     environment:
       POSTGRES_DB: inyoka
