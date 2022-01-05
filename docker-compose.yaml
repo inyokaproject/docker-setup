@@ -14,8 +14,8 @@ services:
     # increase shared memory like recommended at https://github.com/docker-library/docs/blob/master/postgres/README.md#caveats
     shm_size: 256M
     # TODO: volume
-    #volumes:
-    #  - inyoka-postgres-data:/var/lib/postgresql/data
+    volumes:
+      - inyoka-postgres-data:/var/lib/postgresql/data
 
   inyoka:
     image: inyokaproject
@@ -63,5 +63,5 @@ services:
       - ./theme-ubuntuusers:/inyoka/theme
 
 # https://docs.docker.com/compose/compose-file/compose-file-v3/#volume-configuration-reference
-#volumes:
-#  inyoka-postgres-data: {}
+volumes:
+  inyoka-postgres-data: {}
