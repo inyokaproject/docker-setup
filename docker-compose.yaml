@@ -11,6 +11,8 @@ services:
       POSTGRES_DB: inyoka
       POSTGRES_USER: inyoka
       POSTGRES_PASSWORD: inyoka
+    # increase shared memory like recommended at https://github.com/docker-library/docs/blob/master/postgres/README.md#caveats
+    shm_size: 256M
     # TODO: volume
     #volumes:
     #  - inyoka-postgres-data:/var/lib/postgresql/data
