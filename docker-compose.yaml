@@ -39,8 +39,9 @@ services:
       - /start_inyoka.sh
     # TODO depends_on:
 
+  # TODO in Docker the "Protected mode" is turned off by default. This means that if you expose the port outside of your host (e.g., via -p on docker run), it will be open without a password to anyone.
   redis:
-    image: redis
+    image: redis:alpine
 
   # TODO
   # celery-beat
