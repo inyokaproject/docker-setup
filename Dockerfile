@@ -18,7 +18,7 @@ WORKDIR /inyoka/code
 
 RUN python3 -m venv ~/.venvs/inyoka
 
-RUN ~/.venvs/inyoka/bin/pip install --upgrade pip
+RUN ~/.venvs/inyoka/bin/pip install --no-cache-dir --upgrade pip
 RUN ~/.venvs/inyoka/bin/pip install --require-hashes --no-cache-dir -r extra/requirements/development.txt
 
 COPY start_inyoka.sh /
