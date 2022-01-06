@@ -43,3 +43,7 @@ stop running in background
 ```cd /srv/www && docker-compose down```
 
 
+for a development setup run
+
+```docker-compose -f docker-compose.yaml -f docker-development.yml up```
+

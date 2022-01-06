@@ -22,13 +22,9 @@ RUN python3 -m venv ~/.venvs/inyoka
 RUN ~/.venvs/inyoka/bin/pip install --no-cache-dir --upgrade pip
 RUN ~/.venvs/inyoka/bin/pip install --require-hashes --no-cache-dir -r extra/requirements/development.txt
 
-COPY start_inyoka.sh /
-
 
 # theme
 
 COPY theme-ubuntuusers /inyoka/theme
 
 RUN sh -c 'cd /inyoka/theme && ~/.venvs/inyoka/bin/python setup.py develop'
-
-COPY build_statics.sh /

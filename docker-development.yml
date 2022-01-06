@@ -1,3 +1,5 @@
+version: "3.7"
+
 # compose fragment for development setups
 # https://docs.docker.com/compose/extends/
 
@@ -18,19 +20,23 @@ services:
       - "media.ubuntuusers.local:127.0.0.1"
     environment:
       INYOKA_ADMIN_PASSWORD: secret
-    entrypoint:
-      - bash
-    command:
-      - /start_inyoka.sh
+    command: >
+      sh -c "
+      /root/.venvs/inyoka/bin/python manage.py migrate &&
+      /root/.venvs/inyoka/bin/python manage.py runserver 0.0.0.0:8080"
+    ## TODO /root/.venvs/inyoka/bin/python manage.py create_superuser --username admin --password $INYOKA_ADMIN_PASSWORD --email 'admin@localhost'
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme
       - ./inyoka:/inyoka/code
 
   build_statics_theme:
     image: inyokaproject
-    entrypoint:
-      - bash
-    command:
-      - /build_statics.sh
+    working_dir: /inyoka/theme
+    command: >
+      sh -c "
+      apt-get install -y inotify-tools &&
+      /root/.venvs/inyoka/bin/python setup.py develop &&
+      npm install &&
+      npm run watch"
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme
