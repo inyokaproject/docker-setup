@@ -1,0 +1,36 @@
+# compose fragment for development setups
+# https://docs.docker.com/compose/extends/
+
+services:
+
+  inyoka-worker:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    extra_hosts:
+      - "ubuntuusers.local:127.0.0.1"
+      - "forum.ubuntuusers.local:127.0.0.1"
+      - "paste.ubuntuusers.local:127.0.0.1"
+      - "wiki.ubuntuusers.local:127.0.0.1"
+      - "planet.ubuntuusers.local:127.0.0.1"
+      - "ikhaya.ubuntuusers.local:127.0.0.1"
+      - "static.ubuntuusers.local:127.0.0.1"
+      - "media.ubuntuusers.local:127.0.0.1"
+    environment:
+      INYOKA_ADMIN_PASSWORD: secret
+    entrypoint:
+      - bash
+    command:
+      - /start_inyoka.sh
+    volumes:
+      - ./theme-ubuntuusers:/inyoka/theme
+      - ./inyoka:/inyoka/code
+
+  build_statics_theme:
+    image: inyokaproject
+    entrypoint:
+      - bash
+    command:
+      - /build_statics.sh
+    volumes:
+      - ./theme-ubuntuusers:/inyoka/theme

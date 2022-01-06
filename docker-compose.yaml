@@ -21,39 +21,19 @@ services:
     # https://github.com/docker-library/postgres/blob/a83005b407ee6d810413500d8a041c957fb10cf0/14/bullseye/Dockerfile#L211-L213
     # https://www.postgresql.org/docs/14/server-start.html suggests no timeout
     stop_grace_period: 5m
-    # TODO: volume
     volumes:
       - inyoka-postgres-data:/var/lib/postgresql/data
 
   inyoka-worker:
     image: inyokaproject
     restart: always
-    build:
-      context: ./
-      dockerfile: Dockerfile
     expose:
-      - "8080/tcp"
-    extra_hosts:
-      - "ubuntuusers.local:127.0.0.1"
-      - "forum.ubuntuusers.local:127.0.0.1"
-      - "paste.ubuntuusers.local:127.0.0.1"
-      - "wiki.ubuntuusers.local:127.0.0.1"
-      - "planet.ubuntuusers.local:127.0.0.1"
-      - "ikhaya.ubuntuusers.local:127.0.0.1"
-      - "static.ubuntuusers.local:127.0.0.1"
-      - "media.ubuntuusers.local:127.0.0.1"
-    volumes:
-      - ./theme-ubuntuusers:/inyoka/theme
-      - ./inyoka:/inyoka/code
+      - "8000/tcp"
     environment:
       << : *default-django
-      # TODO: --workers INT --threads INT
-      # TODO: --reload
-      INYOKA_ADMIN_PASSWORD: secret
-    #entrypoint:
-    #  - bash
+    # TODO: --workers INT --threads INT
+    # TODO: --reload
     command: /root/.venvs/inyoka/bin/gunicorn -b 127.0.0.1:8000 inyoka.wsgi:application
-    #  - /start_inyoka.sh
     # TODO depends_on:
 
   # TODO in Docker the "Protected mode" is turned off by default. This means that if you expose the port outside of your host (e.g., via -p on docker run), it will be open without a password to anyone.
@@ -75,17 +55,7 @@ services:
     command: /root/.venvs/inyoka/bin/celery beat --app=inyoka --loglevel=INFO
     environment:
       << : *default-django
-      # TODO volume for schedule database `-s`, so it's persistent?
-
-  # TODO: only dev
-  theme-ubuntuusers:
-    image: inyokaproject
-    entrypoint:
-      - bash
-    command:
-      - /build_statics.sh
-    volumes:
-      - ./theme-ubuntuusers:/inyoka/theme
+    # TODO volume for schedule database `-s`, so it's persistent?
 
 # https://docs.docker.com/compose/compose-file/compose-file-v3/#volume-configuration-reference
 volumes:
