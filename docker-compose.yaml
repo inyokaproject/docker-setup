@@ -16,6 +16,7 @@ services:
       POSTGRES_DB: inyoka
       POSTGRES_USER: inyoka
       POSTGRES_PASSWORD: inyoka
+      POSTGRES_INITDB_ARGS: "--data-checksums"
     # increase shared memory like recommended at https://github.com/docker-library/docs/blob/master/postgres/README.md#caveats
     shm_size: 256M
     # https://github.com/docker-library/postgres/blob/a83005b407ee6d810413500d8a041c957fb10cf0/14/bullseye/Dockerfile#L211-L213
