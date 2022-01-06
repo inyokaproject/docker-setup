@@ -1,6 +1,11 @@
 version: "3.7" # https://docs.docker.com/compose/compose-file/compose-versioning/
 
-services: 
+x-django:
+  &default-django
+  DJANGO_SETTINGS_MODULE: settings
+
+
+services:
   postgres:
     # pin postgres major version to prevent unexpected database migrations
     # debian image is used, as alpine can have problems with locals
@@ -20,8 +25,9 @@ services:
     volumes:
       - inyoka-postgres-data:/var/lib/postgresql/data
 
-  inyoka:
+  inyoka-worker:
     image: inyokaproject
+    restart: always
     build:
       context: ./
       dockerfile: Dockerfile
@@ -40,20 +46,36 @@ services:
       - ./theme-ubuntuusers:/inyoka/theme
       - ./inyoka:/inyoka/code
     environment:
-      - INYOKA_ADMIN_PASSWORD=secret
-    entrypoint:
-      - bash
-    command: # TODO use gunicorn
-      - /start_inyoka.sh
+      << : *default-django
+      # TODO: --workers INT --threads INT
+      # TODO: --reload
+      INYOKA_ADMIN_PASSWORD: secret
+    #entrypoint:
+    #  - bash
+    command: /root/.venvs/inyoka/bin/gunicorn -b 127.0.0.1:8000 inyoka.wsgi:application
+    #  - /start_inyoka.sh
     # TODO depends_on:
 
   # TODO in Docker the "Protected mode" is turned off by default. This means that if you expose the port outside of your host (e.g., via -p on docker run), it will be open without a password to anyone.
   redis:
     image: redis:alpine
+    restart: always
 
-  # TODO
-  # celery-beat
-  # celery
+  celeryworker:
+    image: inyokaproject
+    restart: always
+    command: /root/.venvs/inyoka/bin/celery worker --app=inyoka --loglevel=INFO
+    # TODO: --time-limit=300 --concurrency=8?
+    environment:
+      << : *default-django
+
+  celerybeat:
+    image: inyokaproject
+    restart: always
+    command: /root/.venvs/inyoka/bin/celery beat --app=inyoka --loglevel=INFO
+    environment:
+      << : *default-django
+      # TODO volume for schedule database `-s`, so it's persistent?
 
   # TODO: only dev
   theme-ubuntuusers:
