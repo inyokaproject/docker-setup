@@ -1,5 +1,6 @@
-FROM ubuntu:20.04
-# TODO: FROM python:3.9 # 3.10 not offically supported by django 2.2
+FROM python:3.8-slim-bullseye
+# 3.9 causes problems with feedparser
+# 3.10 not offically supported by django 2.2
 
 # ARG 'is not persisted in the final image' see https://docs.docker.com/engine/reference/builder/#env
 ARG DEBIAN_FRONTEND=noninteractive
