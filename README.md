@@ -5,45 +5,47 @@ requirements
 -------------
 
  * [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu)
- * [docker-compose](https://github.com/docker/compose/releases)
+ * [docker compose](https://docs.docker.com/compose/cli-command/#install-on-linux) (mind the missing `-`. `docker-compose` is another binary and would be also available in Ubuntu universe. However, there it is outdated. The Docker PPA seems to not include `docker-compose` neither `docker compose` (yet)...)
 
 prepare
 -------
 
-prepare working directory (take note of the '.' in the second line)
+Inside a directory of your choice run
 ```
-cd /srv/www
-git clone git@github.com:inyokaproject/docker-setup.git .
+git clone git@github.com:inyokaproject/docker-setup.git . # take note of the '.'
 git clone git@github.com:inyokaproject/inyoka.git
 git clone git@github.com:inyokaproject/theme-ubuntuusers.git
 ```
 
+Inside this directory you can run more commands:
+
+TODO
 prepare inyoka config:
 
-```cd /srv/www && cp development_settings.py inyoka/```
+```cp development_settings.py inyoka/```
 
 build docker image:
 
-```cd /srv/www && docker-compose build```
+```docker compose build```
 
 run in foreground
 
-```cd /srv/www && docker-compose up```
+```docker compose up```
 
 run in background
 
-```cd /srv/www && docker-compose up -d```
+```docker compose up -d```
 
 show logs from running in background
 
-```cd /srv/www && docker-compose logs```
+```docker compose logs```
 
 stop running in background
 
-```cd /srv/www && docker-compose down```
+```docker compose down```
 
 
 for a development setup run
 
-```docker-compose -f docker-compose.yaml -f docker-development.yml up```
+```docker compose -f docker-compose.yaml -f docker-development.yml up```
 
