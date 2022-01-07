@@ -25,6 +25,16 @@ services:
     volumes:
       - inyoka-postgres-data:/var/lib/postgresql/data
 
+  database-migration:
+    image: inyokaproject
+    command: /root/.venvs/inyoka/bin/python manage.py migrate
+    environment:
+      << : *default-django
+    depends_on:
+      - postgres
+    profiles:
+      - maintenance
+
   inyoka-worker:
     image: inyokaproject
     restart: always
