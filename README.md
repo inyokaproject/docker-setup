@@ -19,6 +19,40 @@ git clone git@github.com:inyokaproject/theme-ubuntuusers.git
 
 Inside this directory you can run more commands:
 
+
+ * check whether docker swarm is alrady enabled on your machine  
+  `docker system info | grep Swarm`
+ * if not, enable it via `docker swarm init`
+
+build the inyokaproject image
+```docker build -t inyokaproject .```
+
+Start the stack
+
+```
+docker stack deploy -c docker-compose.yaml inyoka
+```
+
+Show the status of the services
+
+```
+docker service ls
+```
+
+Remove the stack
+
+```
+docker stack rm inyoka
+```
+
+View logs
+
+```
+docker service logs <service name from service ls>
+```
+
+ * Add `-f` to follow for new entries
+
 TODO
 prepare inyoka config:
 
@@ -49,3 +83,8 @@ for a development setup run
 
 ```docker compose -f docker-compose.yaml -f docker-development.yml up```
 
+Oter notes
+----------
+
+ * "Where is Docker actually storing my data when I use a named volume?"  
+   `docker volume inspect <volume-name>`
