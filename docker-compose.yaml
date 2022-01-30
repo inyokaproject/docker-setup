@@ -23,7 +23,7 @@ services:
     # https://www.postgresql.org/docs/14/server-start.html suggests no timeout
     stop_grace_period: 5m
     volumes:
-      - inyoka-postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
 
   database-migration:
     image: inyokaproject
@@ -60,11 +60,13 @@ services:
   celerybeat:
     image: inyokaproject
     restart: always
-    command: /root/.venvs/inyoka/bin/celery beat --app=inyoka --loglevel=INFO
+    command: /root/.venvs/inyoka/bin/celery beat --app=inyoka --loglevel=INFO --schedule /volume/celerybeat-schedule/celerybeat-schedule
     environment:
       << : *default-django
-    # TODO volume for schedule database `-s`, so it's persistent?
+    volumes:
+      - celerybeat-schedule:/volume/celerybeat-schedule
 
 # https://docs.docker.com/compose/compose-file/compose-file-v3/#volume-configuration-reference
 volumes:
-  inyoka-postgres-data: {}
+  celerybeat-schedule: {}
+  postgres-data: {}
