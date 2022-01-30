@@ -20,6 +20,7 @@ services:
       - "media.ubuntuusers.local:127.0.0.1"
     environment:
       INYOKA_ADMIN_PASSWORD: secret
+    # TODO: use gunicorn with --reload?
     command: >
       sh -c "
       /root/.venvs/inyoka/bin/python manage.py migrate &&
