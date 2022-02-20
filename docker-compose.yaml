@@ -2,7 +2,15 @@ version: "3.7" # https://docs.docker.com/compose/compose-file/compose-versioning
 
 x-django:
   &default-django
-  DJANGO_SETTINGS_MODULE: settings
+  DJANGO_SETTINGS_MODULE: production_settings
+
+x-django-secrets:
+  &django-secrets
+  secrets:
+    - inyoka-postgres-password
+    - inyoka-secret-key
+    - inyoka-akismet-key
+    - inyoka-sentry-dsn
 
 
 services:
@@ -14,14 +22,17 @@ services:
     restart: always
     environment:
       POSTGRES_DB: inyoka
+      # TODO defines superuser name -> do not use superuser from inyoka?
       POSTGRES_USER: inyoka
-      POSTGRES_PASSWORD: inyoka
+      POSTGRES_PASSWORD_FILE: /run/secrets/inyoka-postgres-password
       POSTGRES_INITDB_ARGS: "--data-checksums"
     # increase shared memory like recommended at https://github.com/docker-library/docs/blob/master/postgres/README.md#caveats
     shm_size: 256M
     # https://github.com/docker-library/postgres/blob/a83005b407ee6d810413500d8a041c957fb10cf0/14/bullseye/Dockerfile#L211-L213
     # https://www.postgresql.org/docs/14/server-start.html suggests no timeout
     stop_grace_period: 5m
+    secrets:
+      - inyoka-postgres-password
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
@@ -36,6 +47,7 @@ services:
 #      - maintenance
 
   inyoka-worker:
+    << : *django-secrets
     image: inyokaproject
     restart: always
     expose:
@@ -51,6 +63,7 @@ services:
     restart: always
 
   celeryworker:
+    << : *django-secrets
     image: inyokaproject
     restart: always
     command: /root/.venvs/inyoka/bin/celery worker --app=inyoka --loglevel=INFO --concurrency=8
@@ -58,6 +71,7 @@ services:
       << : *default-django
 
   celerybeat:
+    << : *django-secrets
     image: inyokaproject
     restart: always
     command: /root/.venvs/inyoka/bin/celery beat --app=inyoka --loglevel=INFO --schedule /volume/celerybeat-schedule/celerybeat-schedule
@@ -65,6 +79,17 @@ services:
       << : *default-django
     volumes:
       - celerybeat-schedule:/volume/celerybeat-schedule
+
+
+secrets:
+  inyoka-postgres-password:
+    external: true
+  inyoka-secret-key:
+    external: true
+  inyoka-akismet-key:
+    external: true
+  inyoka-sentry-dsn:
+    external: true
 
 # https://docs.docker.com/compose/compose-file/compose-file-v3/#volume-configuration-reference
 volumes:

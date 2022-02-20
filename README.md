@@ -27,6 +27,16 @@ Inside this directory you can run more commands:
 build the inyokaproject image
 ```docker build -t inyokaproject .```
 
+Create docker secrets needed for the services
+
+```
+openssl rand -base64 32 | docker secret create inyoka-postgres-password -
+openssl rand -base64 32 | docker secret create inyoka-secret-key -
+docker secret create inyoka-akismet-key /path/to/file_with_secret/
+# note the space at the start of the command to prevent the secret in the shell history
+ echo -n 'https://examplePublicKey@localhost/0' | docker secret create inyoka-sentry-dsn -
+```
+
 Start the stack
 
 ```
@@ -38,6 +48,13 @@ Show the status of the services
 ```
 docker service ls
 ```
+
+TODO: To publish the port of the web worker
+
+```
+docker service update --publish-add published=8000,target=8000 inyoka_inyoka-worker
+```
+
 
 Remove the stack
 
@@ -83,8 +100,8 @@ for a development setup run
 
 ```docker compose -f docker-compose.yaml -f docker-development.yml up```
 
-Oter notes
-----------
+Other notes
+-----------
 
  * "Where is Docker actually storing my data when I use a named volume?"  
    `docker volume inspect <volume-name>`
