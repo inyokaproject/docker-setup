@@ -59,6 +59,14 @@ TODO: To publish the port of the web worker
 docker service update --publish-add published=8000,target=8000 inyoka_inyoka-worker
 ```
 
+Run migrations (works only on the same machine as the container runs)
+
+```
+docker exec -it <container> /root/.venvs/inyoka/bin/python manage.py migrate
+```
+
+You can get the container id via `docker container ls`.
+
 
 Remove the stack
 
