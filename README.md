@@ -10,7 +10,11 @@ requirements
 prepare
 -------
 
-Inside a directory of your choice run
+ * check whether docker swarm is alrady enabled on your machine  
+  `docker system info | grep Swarm`
+ * if not, enable it via `docker swarm init`
+
+Inside a directory of your choice clone the required repositories
 ```
 git clone git@github.com:inyokaproject/docker-setup.git . # take note of the '.'
 git clone git@github.com:inyokaproject/inyoka.git
@@ -19,12 +23,12 @@ git clone git@github.com:inyokaproject/theme-ubuntuusers.git
 
 Inside this directory you can run more commands:
 
+TODO
+prepare inyoka config:
 
- * check whether docker swarm is alrady enabled on your machine  
-  `docker system info | grep Swarm`
- * if not, enable it via `docker swarm init`
+```cp development_settings.py inyoka/```
 
-build the inyokaproject image
+Build the inyokaproject image
 ```docker build -t inyokaproject .```
 
 Create docker secrets needed for the services
@@ -70,35 +74,12 @@ docker service logs <service name from service ls>
 
  * Add `-f` to follow for new entries
 
-TODO
-prepare inyoka config:
 
-```cp development_settings.py inyoka/```
-
-build docker image:
-
-```docker compose build```
-
-run in foreground
-
-```docker compose up```
-
-run in background
-
-```docker compose up -d```
-
-show logs from running in background
-
-```docker compose logs```
-
-stop running in background
-
-```docker compose down```
 
 
 for a development setup run
 
-```docker compose -f docker-compose.yaml -f docker-development.yml up```
+```docker stack deploy --compose-file docker-compose.yaml --compose-file docker-development.yml inyoka-dev```
 
 Other notes
 -----------
