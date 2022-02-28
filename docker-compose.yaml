@@ -1,4 +1,4 @@
-version: "3.7" # https://docs.docker.com/compose/compose-file/compose-versioning/
+version: "3.8" # https://docs.docker.com/compose/compose-file/compose-versioning/
 
 x-django:
   &default-django
@@ -8,9 +8,13 @@ x-django-secrets:
   &django-secrets
   secrets:
     - inyoka-postgres-password
+    - inyoka-redis-password
     - inyoka-secret-key
     - inyoka-akismet-key
     - inyoka-sentry-dsn
+  configs:
+    - source: inyoka-config
+      target: /inyoka/code/production_settings.py
 
 
 services:
@@ -57,10 +61,18 @@ services:
     command: /root/.venvs/inyoka/bin/gunicorn -b 0.0.0.0:8000 --workers 8 --max-requests 500 inyoka.wsgi:application
     # TODO depends_on:
 
-  # TODO in Docker the "Protected mode" is turned off by default. This means that if you expose the port outside of your host (e.g., via -p on docker run), it will be open without a password to anyone.
   redis:
-    image: redis:alpine
+    image: redis:6.2-alpine
     restart: always
+    command: redis-server /etc/redis/redis.conf
+    configs:
+     - source: redis-config
+       target: /etc/redis/redis.conf
+       uid: "999" # see `id redis` inside the redis container
+       gid: "1000"
+       mode: 0440
+    secrets:
+      - inyoka-redis-password
 
   celeryworker:
     << : *django-secrets
@@ -81,8 +93,18 @@ services:
       - celerybeat-schedule:/volume/celerybeat-schedule
 
 
+configs:
+  inyoka-config:
+    file: ./production_settings.py
+    template_driver: golang
+  redis-config:
+    file: ./redis.conf
+    template_driver: golang
+
 secrets:
   inyoka-postgres-password:
+    external: true
+  inyoka-redis-password:
     external: true
   inyoka-secret-key:
     external: true

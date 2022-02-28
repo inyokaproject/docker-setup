@@ -23,11 +23,6 @@ git clone git@github.com:inyokaproject/theme-ubuntuusers.git
 
 Inside this directory you can run more commands:
 
-TODO
-prepare inyoka config:
-
-```cp development_settings.py inyoka/```
-
 Build the inyokaproject image
 ```docker build -t inyokaproject .```
 
@@ -35,11 +30,14 @@ Create docker secrets needed for the services
 
 ```
 openssl rand -base64 32 | tr -d '\n' | docker secret create inyoka-postgres-password -
+openssl rand -base64 32 | tr -d '\n' | docker secret create inyoka-redis-password -
 openssl rand -base64 32 | tr -d '\n' | docker secret create inyoka-secret-key -
 docker secret create inyoka-akismet-key /path/to/file_with_secret/
 # note the space at the start of the command to prevent the secret in the shell history
  echo -n 'https://examplePublicKey@localhost/0' | docker secret create inyoka-sentry-dsn -
 ```
+
+Review the prepared inyoka config files, if everything fits your needs (f.e. the maximum cache sizes to the server's physical amount of RAM).
 
 Start the stack
 
