@@ -1,11 +1,9 @@
 from inyoka import INYOKA_VERSION
 from inyoka.default_settings import *
+
 from os.path import join
 import socket
-
-def read_docker_secret(secret_name):
-    with open('/run/secrets/{}'.format(secret_name)) as secret:
-        return secret.read()
+import urllib.parse
 
 # Database Setup
 DATABASES = {
@@ -13,7 +11,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'inyoka',
         'USER': 'inyoka',
-        'PASSWORD': read_docker_secret('inyoka-postgres-password'),
+        'PASSWORD': '{{ secret "inyoka-postgres-password" }}',
         'HOST': 'postgres',
         'PORT': '5432',
         'CONN_MAX_AGE': None,
@@ -36,7 +34,7 @@ DEBUG = TEMPLATE_DEBUG = DATABASE_DEBUG = False
 CACHE_PREFIX = 'inyoka/'
 CACHES['default']['LOCATION'] = 'redis://redis:6379/1'
 CACHES['content']['LOCATION'] = 'redis://redis:6379/0'
-CACHES['default']['OPTIONS']['PASSWORD'] = CACHES['content']['OPTIONS']['PASSWORD'] =  '{{ secret "inyoka-redis-password" }}'
+CACHES['default']['OPTIONS']['PASSWORD'] = CACHES['content']['OPTIONS']['PASSWORD'] = '{{ secret "inyoka-redis-password" }}'
 
 # URL Setup
 INYOKA_URI_SCHEME = 'https'
@@ -56,7 +54,7 @@ INYOKA_CONTACT_EMAIL = '@'.join(['webteam', BASE_DOMAIN_NAME])
 
 # Antispam Setup
 INYOKA_USE_AKISMET = True
-INYOKA_AKISMET_KEY = read_docker_secret('inyoka-akismet-key')
+INYOKA_AKISMET_KEY = '{{ secret "inyoka-akismet-key" }}'
 INYOKA_AKISMET_URL = 'http://ubuntuusers.de/'
 INYOKA_AKISMET_DEFAULT_IS_SPAM = False
 
@@ -73,7 +71,7 @@ WIKI_RECENTCHANGES_MAX = 500
 # Username of the System User
 INYOKA_SYSTEM_USER = 'ubuntuusers'
 
-SECRET_KEY = read_docker_secret('inyoka-secret-key')
+SECRET_KEY = '{{ secret "inyoka-secret-key" }}'
 
 # cookie lifetime (4 weeks)
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7 * 4
@@ -84,7 +82,7 @@ from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 
 sentry_sdk.init(
-    dsn=read_docker_secret('inyoka-sentry-dsn'),
+    dsn='{{ secret "inyoka-sentry-dsn" }}',
     integrations=[DjangoIntegration(),CeleryIntegration()],
     traces_sample_rate=1.0,
     release=INYOKA_VERSION,
@@ -93,7 +91,8 @@ sentry_sdk.init(
 
 
 # Celery Setup
-CELERY_BROKER_URL = CELERY_RESULT_BACKEND = 'redis://{{ secret "inyoka-redis-password" }}@redis:6379/2'
+redis_password_quoted = urllib.parse.quote('{{ secret "inyoka-redis-password" }}')
+CELERY_BROKER_URL = CELERY_RESULT_BACKEND = f'redis://:{redis_password_quoted}@redis:6379/2'
 
 # HTTPS Setup
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
