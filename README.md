@@ -1,11 +1,10 @@
-Run inyoka and themes in docker
-============================
+Run inyoka with theme in docker
+===============================
 
 requirements
 -------------
 
  * [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu)
- * [docker compose](https://docs.docker.com/compose/cli-command/#install-on-linux) (mind the missing `-`. `docker-compose` is another binary and would be also available in Ubuntu universe. However, there it is outdated. The Docker PPA seems to not include `docker-compose` neither `docker compose` (yet)...)
 
 prepare
 -------
@@ -51,13 +50,13 @@ Show the status of the services
 docker service ls
 ```
 
-TODO: To publish the port of the web worker
+To publish the port of the web worker
 
 ```
-docker service update --publish-add published=8000,target=8000 inyoka_inyoka-worker
+docker service update --publish-add published=80,target=8000 inyoka_inyoka-worker
 ```
 
-Run migrations (works only on the same machine as the container runs)
+Run migrations (works only on the same machine, where the container runs)
 
 ```
 docker exec -it <container> /root/.venvs/inyoka/bin/python manage.py migrate
@@ -86,6 +85,7 @@ docker service logs <service name from service ls>
 for a development setup run
 
 ```docker stack deploy --compose-file docker-compose.yaml --compose-file docker-development.yml inyoka-dev```
+
 
 Other notes
 -----------
