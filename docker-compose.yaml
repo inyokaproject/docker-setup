@@ -35,6 +35,10 @@ services:
     # https://github.com/docker-library/postgres/blob/a83005b407ee6d810413500d8a041c957fb10cf0/14/bullseye/Dockerfile#L211-L213
     # https://www.postgresql.org/docs/14/server-start.html suggests no timeout
     stop_grace_period: 5m
+    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
+    configs:
+      - source: postgres-config
+        target: /etc/postgresql/postgresql.conf
     secrets:
       - inyoka-postgres-password
     volumes:
@@ -96,6 +100,9 @@ services:
 configs:
   inyoka-config:
     file: ./production_settings.py
+    template_driver: golang
+  postgres-config:
+    file: ./postgres.conf
     template_driver: golang
   redis-config:
     file: ./redis.conf
