@@ -29,6 +29,7 @@ services:
       # TODO defines superuser name -> do not use superuser from inyoka?
       POSTGRES_USER: inyoka
       POSTGRES_PASSWORD_FILE: /run/secrets/inyoka-postgres-password
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
       POSTGRES_INITDB_ARGS: "--data-checksums"
     # increase shared memory like recommended at https://github.com/docker-library/docs/blob/master/postgres/README.md#caveats
     shm_size: 256M
