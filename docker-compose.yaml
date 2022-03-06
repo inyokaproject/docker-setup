@@ -2,10 +2,8 @@ version: "3.8" # https://docs.docker.com/compose/compose-file/compose-versioning
 
 x-django:
   &default-django
-  DJANGO_SETTINGS_MODULE: production_settings
-
-x-django-secrets:
-  &django-secrets
+  environment:
+    DJANGO_SETTINGS_MODULE: production_settings
   secrets:
     - inyoka-postgres-password
     - inyoka-redis-password
@@ -46,23 +44,20 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
 #  database-migration:
+#    << : *default-django
 #    image: inyokaproject
 #    command: /root/.venvs/inyoka/bin/python manage.py migrate
-#    environment:
-#      << : *default-django
 #    depends_on:
 #      - postgres
 #    profiles:
 #      - maintenance
 
   inyoka-worker:
-    << : *django-secrets
+    << : *default-django
     image: inyokaproject
     restart: always
     expose:
       - "8000/tcp"
-    environment:
-      << : *default-django
     command: /root/.venvs/inyoka/bin/gunicorn -b 0.0.0.0:8000 --workers 8 --max-requests 500 inyoka.wsgi:application
     # TODO depends_on:
 
@@ -80,20 +75,16 @@ services:
       - inyoka-redis-password
 
   celeryworker:
-    << : *django-secrets
+    << : *default-django
     image: inyokaproject
     restart: always
     command: /root/.venvs/inyoka/bin/celery worker --app=inyoka --loglevel=INFO --concurrency=8
-    environment:
-      << : *default-django
 
   celerybeat:
-    << : *django-secrets
+    << : *default-django
     image: inyokaproject
     restart: always
     command: /root/.venvs/inyoka/bin/celery beat --app=inyoka --loglevel=INFO --schedule /volume/celerybeat-schedule/celerybeat-schedule
-    environment:
-      << : *default-django
     volumes:
       - celerybeat-schedule:/volume/celerybeat-schedule
 
