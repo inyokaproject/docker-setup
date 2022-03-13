@@ -1,30 +1,37 @@
-version: "3.7"
+version: "3.8"
 
-# compose fragment for development setups
+# fragment for development setups
 # https://docs.docker.com/compose/extends/
+
+x-django:
+  &default-django
+  environment:
+    DJANGO_SETTINGS_MODULE: development_settings
+  configs:
+    - source: inyoka-dev-config
+      target: /inyoka/code/development_settings.py
 
 services:
 
   inyoka-worker:
+    << : *default-django
     build:
       context: ./
       dockerfile: Dockerfile
     extra_hosts:
-      - "ubuntuusers.local:127.0.0.1"
-      - "forum.ubuntuusers.local:127.0.0.1"
-      - "paste.ubuntuusers.local:127.0.0.1"
-      - "wiki.ubuntuusers.local:127.0.0.1"
-      - "planet.ubuntuusers.local:127.0.0.1"
-      - "ikhaya.ubuntuusers.local:127.0.0.1"
-      - "static.ubuntuusers.local:127.0.0.1"
-      - "media.ubuntuusers.local:127.0.0.1"
-    environment:
-      INYOKA_ADMIN_PASSWORD: secret
+      - "ubuntuusers.localhost:127.0.0.1"
+      - "forum.ubuntuusers.localhost:127.0.0.1"
+      - "paste.ubuntuusers.localhost:127.0.0.1"
+      - "wiki.ubuntuusers.localhost:127.0.0.1"
+      - "planet.ubuntuusers.localhost:127.0.0.1"
+      - "ikhaya.ubuntuusers.localhost:127.0.0.1"
+      - "static.ubuntuusers.localhost:127.0.0.1"
+      - "media.ubuntuusers.localhost:127.0.0.1"
     # TODO: use gunicorn with --reload?
     command: >
       sh -c "
       /root/.venvs/inyoka/bin/python manage.py migrate &&
-      /root/.venvs/inyoka/bin/python manage.py runserver 0.0.0.0:8080"
+      /root/.venvs/inyoka/bin/python manage.py runserver 0.0.0.0:8000"
     ## TODO /root/.venvs/inyoka/bin/python manage.py create_superuser --username admin --password $INYOKA_ADMIN_PASSWORD --email 'admin@localhost'
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme
@@ -35,9 +42,15 @@ services:
     working_dir: /inyoka/theme
     command: >
       sh -c "
-      apt-get install -y inotify-tools &&
+      apt-get install -y --no-install-recommends nodejs npm inotify-tools &&
       /root/.venvs/inyoka/bin/python setup.py develop &&
       npm install &&
       npm run watch"
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme
+
+configs:
+  inyoka-dev-config:
+    file: ./development_settings.py
+    template_driver: golang
+

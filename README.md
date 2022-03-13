@@ -81,10 +81,20 @@ docker service logs <service name from service ls>
 
 
 
+Development setup
+-----------------
 
-for a development setup run
+You have to install docker compose via the package `docker-compose-plugin` in the PPA.
 
-```docker stack deploy --compose-file docker-compose.yaml --compose-file docker-development.yml inyoka-dev```
+To create a development setup run
+
+```
+# needed as docker stack does not overwrite 'command' (instead the one from docker-development gets appendeded), see https://github.com/docker/cli/issues/1651#issuecomment-467759678
+docker compose -f docker-compose.yaml -f docker-development.yml config | tail -n +2 | { echo 'version: "3.8"'; cat -; } | docker stack deploy -c - inyoka-dev
+docker service update --publish-add published=8000,target=8000 inyoka-dev_inyoka-worker
+```
+
+You should now be able to visit `ubuntuusers.localhost:8000` in your browser.
 
 
 Other notes
