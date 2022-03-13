@@ -36,6 +36,12 @@ services:
       - ./theme-ubuntuusers:/inyoka/theme
       - ./inyoka:/inyoka/code
 
+  celeryworker:
+    << : *default-django
+
+  celerybeat:
+    << : *default-django
+
   build_statics_theme:
     image: inyokaproject
     working_dir: /inyoka/theme
