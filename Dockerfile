@@ -5,8 +5,8 @@ FROM python:3.8-slim-bullseye AS inyoka_base
 # ARG 'is not persisted in the final image' see https://docs.docker.com/engine/reference/builder/#env
 ARG DEBIAN_FRONTEND=noninteractive
 # from https://docs.docker.com/samples/django/
-ARG PYTHONDONTWRITEBYTECODE=1
-ARG PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends libxml2-dev libxslt1-dev zlib1g-dev libjpeg-dev uuid-dev libfreetype6-dev libpq-dev build-essential libpq-dev libffi-dev python3-dev python3-venv wget libmagic1
