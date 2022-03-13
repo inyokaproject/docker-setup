@@ -25,3 +25,6 @@ STATIC_ROOT = '/inyoka/theme/inyoka_theme_ubuntuusers/static' ## TODO
 LANGUAGE_CODE = 'de-DE'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# disable sentry
+sentry_sdk.init()
