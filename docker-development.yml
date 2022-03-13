@@ -32,7 +32,6 @@ services:
       sh -c "
       /root/.venvs/inyoka/bin/python manage.py migrate &&
       /root/.venvs/inyoka/bin/python manage.py runserver 0.0.0.0:8000"
-    ## TODO /root/.venvs/inyoka/bin/python manage.py create_superuser --username admin --password $INYOKA_ADMIN_PASSWORD --email 'admin@localhost'
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme
       - ./inyoka:/inyoka/code

@@ -96,6 +96,11 @@ docker service update --publish-add published=8000,target=8000 inyoka-dev_inyoka
 
 You should now be able to visit `ubuntuusers.localhost:8000` in your browser.
 
+ * To create some testdata execute  
+   ```docker exec -it <container> /root/.venvs/inyoka/bin/python ./make_testdata.py```
+ * To create a superuser account named `admin` execute  
+   ```docker exec -it <container> /root/.venvs/inyoka/bin/python manage.py create_superuser --username admin --email 'admin@localhost'```
+
 
 Other notes
 -----------
