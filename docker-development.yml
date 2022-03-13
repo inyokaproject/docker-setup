@@ -54,6 +54,11 @@ services:
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme
 
+  smtpd:
+    image: inyokaproject
+    command: python3 -m smtpd --debug --nosetuid --class DebuggingServer 0.0.0.0:1025
+
+
 configs:
   inyoka-dev-config:
     file: ./development_settings.py

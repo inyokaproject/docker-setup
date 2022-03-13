@@ -101,6 +101,7 @@ You should now be able to visit `ubuntuusers.localhost:8000` in your browser.
  * To create a superuser account named `admin` execute  
    ```docker exec -it <container> /root/.venvs/inyoka/bin/python manage.py create_superuser --username admin --email 'admin@localhost'```
 
+ * E-Mail logs can be seen via `docker service logs inyoka-dev_smtpd`
 
 Other notes
 -----------
