@@ -1,0 +1,49 @@
+# https://caddyserver.com/docs/caddyfile/options
+{
+	admin off
+	email inyoka@i.localhost
+	# TODO https://caddyserver.com/docs/caddyfile/options#timeouts
+	# TODO https://caddyserver.com/docs/caddyfile/options#log
+}
+
+# TODO https://caddyserver.com/docs/caddyfile/directives/php_fastcgi
+
+
+# TODO https://hub.docker.com/_/caddy
+
+ubuntuusers.localhost,
+forum.ubuntuusers.localhost,
+paste.ubuntuusers.localhost,
+wiki.ubuntuusers.localhost,
+planet.ubuntuusers.localhost,
+ikhaya.ubuntuusers.localhost {
+	reverse_proxy inyoka-worker:8000
+}
+
+
+media.ubuntuusers.localhost {
+	root * /srv/www/media
+	file_server
+}
+
+static.ubuntuusers.localhost {
+	root * /srv/www/static
+	file_server {
+		precompressed gzip
+	}
+}
+
+# remove www
+# https://caddyserver.com/docs/caddyfile/patterns#redirect-www-subdomain
+www.ubuntuusers.localhost {
+	redir https://{labels.1}.{labels.0}{uri}
+}
+www.forum.ubuntuusers.localhost,
+www.paste.ubuntuusers.localhost,
+www.wiki.ubuntuusers.localhost,
+www.planet.ubuntuusers.localhost,
+www.ikhaya.ubuntuusers.localhost,
+www.static.ubuntuusers.localhost,
+www.media.ubuntuusers.localhost {
+	redir https://{labels.2}.{labels.1}.{labels.0}{uri}
+}
