@@ -25,6 +25,9 @@ Inside this directory you can run more commands:
 Build the inyokaproject image
 ```docker build -t inyokaproject .```
 
+Build the custom caddy image (that includes the static files for inyoka)
+```docker build -t caddy-inyoka --file Dockerfile_caddy .```
+
 Create docker secrets needed for the services
 
 ```
@@ -50,10 +53,10 @@ Show the status of the services
 docker service ls
 ```
 
-To publish the port of the web worker
+To publish the ports of the web server
 
 ```
-docker service update --publish-add published=80,target=8000 inyoka_inyoka-worker
+docker service update --publish-add published=80,target=80 --publish-add published=443,target=443 inyoka_caddy
 ```
 
 Run migrations (works only on the same machine, where the container runs)

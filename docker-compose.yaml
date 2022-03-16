@@ -88,6 +88,16 @@ services:
     volumes:
       - celerybeat-schedule:/volume/celerybeat-schedule
 
+  caddy:
+    image: caddy-inyoka
+    restart: unless-stopped
+    volumes:
+       - caddy_data:/data
+       - caddy_config:/config
+    configs:
+       - source: Caddyfile
+         target: /etc/caddy/Caddyfile
+
 
 configs:
   inyoka-config:
@@ -99,6 +109,10 @@ configs:
   redis-config:
     file: ./redis.conf
     template_driver: golang
+  Caddyfile:
+    file: ./Caddyfile
+    template_driver: golang
+
 
 secrets:
   inyoka-postgres-password:
@@ -116,3 +130,5 @@ secrets:
 volumes:
   celerybeat-schedule: {}
   postgres-data: {}
+  caddy_data: {}
+  caddy_config: {}
