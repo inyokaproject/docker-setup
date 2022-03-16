@@ -24,8 +24,8 @@ INSTALLED_APPS += (
 )
 
 # Location of Media and Static Files
-MEDIA_ROOT = '/srv/www/ubuntuusers/media' ## TODO
-STATIC_ROOT = '/srv/www/ubuntuusers/static' ## TODO
+MEDIA_ROOT = '/srv/www/media' ## TODO
+STATIC_ROOT = '/srv/www/static' ## TODO
 
 # Debug disabled on Production!
 DEBUG = TEMPLATE_DEBUG = DATABASE_DEBUG = False
@@ -38,10 +38,10 @@ CACHES['default']['OPTIONS']['PASSWORD'] = CACHES['content']['OPTIONS']['PASSWOR
 
 # URL Setup
 INYOKA_URI_SCHEME = 'https'
-BASE_DOMAIN_NAME = 'ubuntuusers.de' ## TODO
+BASE_DOMAIN_NAME = '{{ config "inyoka-base-domain" }}'
 SESSION_COOKIE_DOMAIN = '.%s' % BASE_DOMAIN_NAME
-MEDIA_URL = 'https://media-cdn.ubuntu-de.org/' ## TODO
-STATIC_URL = 'https://static-cdn.ubuntu-de.org/'
+MEDIA_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-media-domain" }}'
+STATIC_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-static-domain" }}'
 ALLOWED_HOSTS = [SESSION_COOKIE_DOMAIN]
 
 # Mail Setup
@@ -55,7 +55,7 @@ INYOKA_CONTACT_EMAIL = '@'.join(['webteam', BASE_DOMAIN_NAME])
 # Antispam Setup
 INYOKA_USE_AKISMET = True
 INYOKA_AKISMET_KEY = '{{ secret "inyoka-akismet-key" }}'
-INYOKA_AKISMET_URL = 'http://ubuntuusers.de/'
+INYOKA_AKISMET_URL = 'http://%s/' % BASE_DOMAIN_NAME
 INYOKA_AKISMET_DEFAULT_IS_SPAM = False
 
 # Forum Surge Protection

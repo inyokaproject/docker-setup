@@ -13,6 +13,9 @@ x-django:
   configs:
     - source: inyoka-config
       target: /inyoka/code/production_settings.py
+    - inyoka-base-domain
+    - inyoka-media-domain
+    - inyoka-static-domain
 
 
 services:
@@ -92,11 +95,14 @@ services:
     image: caddy-inyoka
     restart: unless-stopped
     volumes:
-       - caddy_data:/data
-       - caddy_config:/config
+      - caddy_data:/data
+      - caddy_config:/config
     configs:
-       - source: Caddyfile
-         target: /etc/caddy/Caddyfile
+      - source: Caddyfile
+        target: /etc/caddy/Caddyfile
+      - inyoka-base-domain
+      - inyoka-media-domain
+      - inyoka-static-domain
 
 
 configs:
@@ -112,7 +118,12 @@ configs:
   Caddyfile:
     file: ./Caddyfile
     template_driver: golang
-
+  inyoka-base-domain:
+    external: true
+  inyoka-media-domain:
+    external: true
+  inyoka-static-domain:
+    external: true
 
 secrets:
   inyoka-postgres-password:

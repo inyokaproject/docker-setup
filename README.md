@@ -39,6 +39,15 @@ docker secret create inyoka-akismet-key /path/to/file_with_secret/
  echo -n 'https://examplePublicKey@localhost/0' | docker secret create inyoka-sentry-dsn -
 ```
 
+Change the domains according to your needs:
+
+```
+echo -n 'ubuntuusers.de' | docker config create inyoka-base-domain -
+echo -n 'media-cdn.ubuntu-de.org' | docker config create inyoka-media-domain -
+echo -n 'static-cdn.ubuntu-de.org' | docker config create inyoka-static-domain -
+```
+
+
 Review the prepared inyoka config files, if everything fits your needs (f.e. the maximum cache sizes to the server's physical amount of RAM).
 
 Start the stack
