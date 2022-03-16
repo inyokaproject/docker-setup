@@ -22,6 +22,9 @@ RUN ~/.venvs/inyoka/bin/pip install --require-hashes --no-cache-dir -r extra/req
 COPY theme-ubuntuusers /inyoka/theme
 RUN sh -c 'cd /inyoka/theme && ~/.venvs/inyoka/bin/python setup.py develop'
 
+# remove previously collected statics (could be also symlinks)
+RUN rm -rf /inyoka/code/inyoka/static-collected
+
 
 
 # only install node packages in an intermediate container
@@ -33,9 +36,9 @@ RUN apt-get install -y --no-install-recommends nodejs npm
 RUN npm ci
 RUN npm run all
 WORKDIR /inyoka/code
-RUN ~/.venvs/inyoka/bin/python manage.py collectstatic --clear --noinput
+RUN ~/.venvs/inyoka/bin/python manage.py collectstatic --noinput
 
 
 
 FROM inyoka_base AS inyoka_with_statics
-COPY --from=inyoka_with_node /inyoka/code/inyoka/static-collected /inyoka/code/inyoka
+COPY --from=inyoka_with_node /inyoka/code/inyoka/static-collected /inyoka/code/inyoka/static-collected/
