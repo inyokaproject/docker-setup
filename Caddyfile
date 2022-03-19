@@ -6,11 +6,6 @@
 	# TODO https://caddyserver.com/docs/caddyfile/options#log
 }
 
-# TODO https://caddyserver.com/docs/caddyfile/directives/php_fastcgi
-
-
-# TODO https://hub.docker.com/_/caddy
-
 {{ config "inyoka-base-domain" }},
 forum.{{ config "inyoka-base-domain" }},
 paste.{{ config "inyoka-base-domain" }},
