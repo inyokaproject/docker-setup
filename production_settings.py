@@ -40,8 +40,8 @@ CACHES['default']['OPTIONS']['PASSWORD'] = CACHES['content']['OPTIONS']['PASSWOR
 INYOKA_URI_SCHEME = 'https'
 BASE_DOMAIN_NAME = '{{ config "inyoka-base-domain" }}'
 SESSION_COOKIE_DOMAIN = '.%s' % BASE_DOMAIN_NAME
-MEDIA_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-media-domain" }}'
-STATIC_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-static-domain" }}'
+MEDIA_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-media-domain" }}/'
+STATIC_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-static-domain" }}/'
 ALLOWED_HOSTS = [SESSION_COOKIE_DOMAIN]
 
 # Mail Setup
