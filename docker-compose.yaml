@@ -16,6 +16,8 @@ x-django:
     - inyoka-base-domain
     - inyoka-media-domain
     - inyoka-static-domain
+  volumes:
+    - media-files:/srv/www/media
 
 
 services:
@@ -97,6 +99,7 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+      - media-files:/srv/www/media
     configs:
       - source: Caddyfile
         target: /etc/caddy/Caddyfile
@@ -141,5 +144,6 @@ secrets:
 volumes:
   celerybeat-schedule: {}
   postgres-data: {}
+  media-files: {}
   caddy_data: {}
   caddy_config: {}
