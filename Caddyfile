@@ -8,6 +8,7 @@
 
 (common) {
 	header -Server
+	header Strict-Transport-Security max-age=31536000;
 }
 
 {{ config "inyoka-base-domain" }},
