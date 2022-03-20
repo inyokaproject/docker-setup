@@ -6,6 +6,10 @@
 	# TODO https://caddyserver.com/docs/caddyfile/options#log
 }
 
+(common) {
+	header -Server
+}
+
 {{ config "inyoka-base-domain" }},
 forum.{{ config "inyoka-base-domain" }},
 paste.{{ config "inyoka-base-domain" }},
@@ -13,12 +17,16 @@ wiki.{{ config "inyoka-base-domain" }},
 planet.{{ config "inyoka-base-domain" }},
 ikhaya.{{ config "inyoka-base-domain" }} {
 	reverse_proxy inyoka-worker:8000
+
+	import common
 }
 
 
 {{ config "inyoka-media-domain" }} {
 	root * /srv/www/media
 	file_server
+
+	import common
 }
 
 {{ config "inyoka-static-domain" }} {
@@ -26,12 +34,16 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 	file_server {
 		precompressed gzip
 	}
+
+	import common
 }
 
 # remove www
 # https://caddyserver.com/docs/caddyfile/patterns#redirect-www-subdomain
 www.{{ config "inyoka-base-domain" }} {
 	redir https://{labels.1}.{labels.0}{uri}
+
+	import common
 }
 www.forum.{{ config "inyoka-base-domain" }},
 www.paste.{{ config "inyoka-base-domain" }},
@@ -41,4 +53,6 @@ www.ikhaya.{{ config "inyoka-base-domain" }},
 www.{{ config "inyoka-static-domain" }},
 www.{{ config "inyoka-media-domain" }} {
 	redir https://{labels.2}.{labels.1}.{labels.0}{uri}
+
+	import common
 }
