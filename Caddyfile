@@ -28,6 +28,7 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 	file_server
 
 	import common
+	header Cache-Control max-age=2592000 # 30 days
 }
 
 {{ config "inyoka-static-domain" }} {
@@ -38,6 +39,7 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 
 	import common
 	header Access-Control-Allow-Origin "*"
+	header Cache-Control max-age=2592000 # 30 days
 }
 
 # remove www
