@@ -37,6 +37,7 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 	}
 
 	import common
+	header Access-Control-Allow-Origin "*"
 }
 
 # remove www
