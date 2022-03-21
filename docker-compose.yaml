@@ -64,7 +64,6 @@ services:
     expose:
       - "8000/tcp"
     command: /root/.venvs/inyoka/bin/gunicorn -b 0.0.0.0:8000 --workers 8 --max-requests 500 inyoka.wsgi:application
-    # TODO depends_on:
 
   redis:
     image: redis:6.2-alpine
