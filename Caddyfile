@@ -9,6 +9,7 @@
 (common) {
 	header -Server
 	header Strict-Transport-Security max-age=31536000;
+	header X-Content-Type-Options nosniff
 }
 
 {{ config "inyoka-base-domain" }},
