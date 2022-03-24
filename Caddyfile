@@ -29,6 +29,11 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 
 	import common
 	header Cache-Control max-age=2592000 # 30 days
+
+	@notlinkmap {
+		not path /linkmap/*
+	}
+	header @notlinkmap Content-Type application/octet-stream
 }
 
 {{ config "inyoka-static-domain" }} {
