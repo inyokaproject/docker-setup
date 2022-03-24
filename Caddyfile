@@ -45,6 +45,8 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 	import common
 	header Access-Control-Allow-Origin "*"
 	header Cache-Control max-age=2592000 # 30 days
+
+	rewrite /favicon.ico /img/favicon.ico
 }
 
 # remove www
