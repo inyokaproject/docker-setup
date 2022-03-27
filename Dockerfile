@@ -14,13 +14,13 @@ RUN apt-get install -y --no-install-recommends libxml2-dev libxslt1-dev zlib1g-d
 # inyoka
 COPY inyoka /inyoka/code
 WORKDIR /inyoka/code
-RUN python3 -m venv ~/.venvs/inyoka
-RUN ~/.venvs/inyoka/bin/pip install --no-cache-dir --upgrade pip
-RUN ~/.venvs/inyoka/bin/pip install --require-hashes --no-cache-dir -r extra/requirements/development.txt
+RUN python3 -m venv /inyoka/venv
+RUN /inyoka/venv/bin/pip install --no-cache-dir --upgrade pip
+RUN /inyoka/venv/bin/pip install --require-hashes --no-cache-dir -r extra/requirements/development.txt
 
 # theme
 COPY theme-ubuntuusers /inyoka/theme
-RUN sh -c 'cd /inyoka/theme && ~/.venvs/inyoka/bin/python setup.py develop'
+RUN sh -c 'cd /inyoka/theme && /inyoka/venv/bin/python setup.py develop'
 
 # remove previously collected statics (could be also symlinks)
 RUN rm -rf /inyoka/code/inyoka/static-collected
@@ -36,9 +36,17 @@ RUN apt-get install -y --no-install-recommends nodejs npm
 RUN npm ci
 RUN npm run all
 WORKDIR /inyoka/code
-RUN ~/.venvs/inyoka/bin/python manage.py collectstatic --noinput
+RUN /inyoka/venv/bin/python manage.py collectstatic --noinput
 
 
 
 FROM inyoka_base AS inyoka_with_statics
 COPY --from=inyoka_with_node /inyoka/code/inyoka/static-collected /inyoka/code/inyoka/static-collected/
+
+# setup own inyoka user instead of root
+RUN touch /inyoka/code/celery.log /inyoka/code/inyoka.log
+RUN mkdir -p /volume/celerybeat-schedule/ /srv/www/media
+RUN groupadd --gid 998 --system inyoka
+RUN useradd --system --no-create-home --no-log-init --gid inyoka --groups inyoka --uid 998 inyoka
+RUN chown inyoka:inyoka /inyoka/code/celery.log /inyoka/code/inyoka.log /volume/celerybeat-schedule/ /srv/www/media
+USER inyoka

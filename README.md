@@ -71,7 +71,7 @@ docker service update --publish-add published=80,target=80 --publish-add publish
 Run migrations (works only on the same machine, where the container runs)
 
 ```
-docker exec -it <container id> /root/.venvs/inyoka/bin/python manage.py migrate
+docker exec -it <container id> /inyoka/venv/bin/python manage.py migrate
 ```
 
 You can get the container id via `docker container ls`.
@@ -109,9 +109,9 @@ docker service update --publish-add published=8000,target=8000 inyoka-dev_inyoka
 You should now be able to visit `ubuntuusers.localhost:8000` in your browser.
 
  * To create some testdata execute  
-   ```docker exec -it <container> /root/.venvs/inyoka/bin/python ./make_testdata.py```
+   ```docker exec -it <container> /inyoka/venv/bin/python ./make_testdata.py```
  * To create a superuser account named `admin` execute  
-   ```docker exec -it <container> /root/.venvs/inyoka/bin/python manage.py create_superuser --username admin --email 'admin@localhost'```
+   ```docker exec -it <container> /inyoka/venv/bin/python manage.py create_superuser --username admin --email 'admin@localhost'```
 
  * E-Mail logs can be seen via `docker service logs inyoka-dev_smtpd`
 

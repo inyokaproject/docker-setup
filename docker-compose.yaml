@@ -51,7 +51,7 @@ services:
 #  database-migration:
 #    << : *default-django
 #    image: inyokaproject
-#    command: /root/.venvs/inyoka/bin/python manage.py migrate
+#    command: /inyoka/venv/bin/python manage.py migrate
 #    depends_on:
 #      - postgres
 #    profiles:
@@ -63,7 +63,7 @@ services:
     restart: always
     expose:
       - "8000/tcp"
-    command: /root/.venvs/inyoka/bin/gunicorn -b 0.0.0.0:8000 --workers 8 --max-requests 500 inyoka.wsgi:application
+    command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 8 --max-requests 500 inyoka.wsgi:application
 
   redis:
     image: redis:6.2-alpine
@@ -82,13 +82,13 @@ services:
     << : *default-django
     image: inyokaproject
     restart: always
-    command: /root/.venvs/inyoka/bin/celery worker --app=inyoka --loglevel=INFO --concurrency=8
+    command: /inyoka/venv/bin/celery worker --app=inyoka --loglevel=INFO --concurrency=8
 
   celerybeat:
     << : *default-django
     image: inyokaproject
     restart: always
-    command: /root/.venvs/inyoka/bin/celery beat --app=inyoka --loglevel=INFO --schedule /volume/celerybeat-schedule/celerybeat-schedule
+    command: /inyoka/venv/bin/celery beat --app=inyoka --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /volume/celerybeat-schedule/celerybeat-schedule
     volumes:
       - celerybeat-schedule:/volume/celerybeat-schedule
 

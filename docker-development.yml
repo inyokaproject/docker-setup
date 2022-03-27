@@ -30,8 +30,8 @@ services:
     # TODO: use gunicorn with --reload?
     command: >
       sh -c "
-      /root/.venvs/inyoka/bin/python manage.py migrate &&
-      /root/.venvs/inyoka/bin/python manage.py runserver 0.0.0.0:8000"
+      /inyoka/venv/bin/python manage.py migrate &&
+      /inyoka/venv/bin/python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme
       - ./inyoka:/inyoka/code
@@ -48,7 +48,7 @@ services:
     command: >
       sh -c "
       apt-get install -y --no-install-recommends nodejs npm inotify-tools &&
-      /root/.venvs/inyoka/bin/python setup.py develop &&
+      /inyoka/venv/bin/python setup.py develop &&
       npm install &&
       npm run watch"
     volumes:
