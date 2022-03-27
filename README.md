@@ -71,7 +71,7 @@ docker service update --publish-add published=80,target=80 --publish-add publish
 Run migrations (works only on the same machine, where the container runs)
 
 ```
-docker exec -it <container> /root/.venvs/inyoka/bin/python manage.py migrate
+docker exec -it <container id> /root/.venvs/inyoka/bin/python manage.py migrate
 ```
 
 You can get the container id via `docker container ls`.
@@ -114,6 +114,18 @@ You should now be able to visit `ubuntuusers.localhost:8000` in your browser.
    ```docker exec -it <container> /root/.venvs/inyoka/bin/python manage.py create_superuser --username admin --email 'admin@localhost'```
 
  * E-Mail logs can be seen via `docker service logs inyoka-dev_smtpd`
+
+To get the local TLS root certifcate of caddy execute
+
+```
+docker exec -it <caddy container id> cat /data/caddy/pki/authorities/local/root.crt > caddy_local_root.crt
+```
+
+It is recommended to use a separate browser profile only for local development. In this separate profile you can import the root certificate.
+The local root CA will not change as long as the caddy volumes are the same.
+
+As an alternative, you can also trust all `*.ubuntuusers.localhost` domains manually.
+However, the leaf certifcates seem to be only valid for one day.
 
 Other notes
 -----------
