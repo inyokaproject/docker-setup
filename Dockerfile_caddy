@@ -1,3 +1,5 @@
 FROM caddy:2.5.0-beta.1-alpine
 
 COPY --from=inyokaproject /inyoka/code/inyoka/static-collected /srv/www/static/
+
+COPY error_template.html /srv/www/templates/
