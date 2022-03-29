@@ -11,6 +11,11 @@
 	header Strict-Transport-Security max-age=31536000;
 	header X-Content-Type-Options nosniff
 
+	request_body {
+		max_size 10MB
+	}
+
+
 	handle_errors {
 		root    * /srv/www/templates/
 		rewrite * /error_template.html
