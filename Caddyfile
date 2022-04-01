@@ -3,7 +3,9 @@
 	admin off
 	email inyoka@i.localhost
 	# TODO https://caddyserver.com/docs/caddyfile/options#timeouts
-	# TODO https://caddyserver.com/docs/caddyfile/options#log
+	log {
+		format console
+	}
 }
 
 (common) {
@@ -15,6 +17,9 @@
 		max_size 10MB
 	}
 
+	#log {
+	#	format console
+	#}
 
 	handle_errors {
 		root    * /srv/www/templates/
