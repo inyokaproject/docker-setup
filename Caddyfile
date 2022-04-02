@@ -29,6 +29,14 @@
 		header Cache-Control no-cache
 		header Content-Type "text/html; charset=utf-8"
 	}
+
+	rewrite /favicon.ico /img/favicon.ico
+	file_server /img/favicon.ico {
+		root /srv/www/static
+	}
+	file_server /robots.txt {
+		root /srv/www/static
+	}
 }
 
 {{ config "inyoka-base-domain" }},
@@ -37,7 +45,11 @@ paste.{{ config "inyoka-base-domain" }},
 wiki.{{ config "inyoka-base-domain" }},
 planet.{{ config "inyoka-base-domain" }},
 ikhaya.{{ config "inyoka-base-domain" }} {
-	reverse_proxy inyoka-worker:8000
+	@exclude {
+		not path /img/favicon.ico
+		not path /robots.txt
+	}
+	reverse_proxy @exclude inyoka-worker:8000
 
 	import common
 }
@@ -50,10 +62,12 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 	import common
 	header Cache-Control max-age=2592000 # 30 days
 
-	@notlinkmap {
+	@exclude {
 		not path /linkmap/*
+		not path /favicon.ico
+		not path /robots.txt
 	}
-	header @notlinkmap Content-Type application/octet-stream
+	header @exclude Content-Type application/octet-stream
 }
 
 {{ config "inyoka-static-domain" }} {
@@ -65,8 +79,6 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 	import common
 	header Access-Control-Allow-Origin "*"
 	header Cache-Control max-age=2592000 # 30 days
-
-	rewrite /favicon.ico /img/favicon.ico
 }
 
 # remove www
