@@ -2,6 +2,7 @@ version: "3.8" # https://docs.docker.com/compose/compose-file/compose-versioning
 
 x-django:
   &default-django
+  image: inyokaproject
   environment:
     DJANGO_SETTINGS_MODULE: production_settings
   secrets:
@@ -50,7 +51,6 @@ services:
 
 #  database-migration:
 #    << : *default-django
-#    image: inyokaproject
 #    command: /inyoka/venv/bin/python manage.py migrate
 #    depends_on:
 #      - postgres
@@ -59,7 +59,6 @@ services:
 
   inyoka-worker:
     << : *default-django
-    image: inyokaproject
     restart: always
     expose:
       - "8000/tcp"
@@ -80,13 +79,11 @@ services:
 
   celeryworker:
     << : *default-django
-    image: inyokaproject
     restart: always
     command: /inyoka/venv/bin/celery worker --app=inyoka --loglevel=INFO --concurrency=8
 
   celerybeat:
     << : *default-django
-    image: inyokaproject
     restart: always
     command: /inyoka/venv/bin/celery beat --app=inyoka --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /volume/celerybeat-schedule/celerybeat-schedule
     volumes:
