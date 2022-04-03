@@ -23,7 +23,7 @@ git clone git@github.com:inyokaproject/theme-ubuntuusers.git
 Inside this directory you can run more commands:
 
 Build the inyokaproject image
-```docker build -t inyokaproject .```
+```docker build --pull -t inyokaproject:$(git -C inyoka/ describe)--theme-ubuntuusers$(git -C theme-ubuntuusers/ describe) -t inyokaproject:latest .```
 
 Build the custom caddy image (that includes the static files for inyoka)
 ```docker build -t caddy-inyoka --file Dockerfile_caddy .```
