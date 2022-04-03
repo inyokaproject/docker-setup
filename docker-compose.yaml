@@ -99,6 +99,7 @@ services:
     configs:
       - source: Caddyfile
         target: /etc/caddy/Caddyfile
+      - caddy-email
       - inyoka-base-domain
       - inyoka-media-domain
       - inyoka-static-domain
@@ -123,6 +124,9 @@ configs:
     external: true
   inyoka-static-domain:
     external: true
+  caddy-email:
+    external: true
+
 
 secrets:
   inyoka-postgres-password:

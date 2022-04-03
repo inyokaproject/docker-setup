@@ -39,6 +39,12 @@ docker secret create inyoka-akismet-key /path/to/file_with_secret/
  echo -n 'https://examplePublicKey@localhost/0' | docker secret create inyoka-sentry-dsn -
 ```
 
+Provide an email (used by caddy for ACME)
+
+```
+echo -n 'inyoka@localhost' | sudo docker config create caddy-email -
+```
+
 Change the domains according to your needs:
 
 ```
