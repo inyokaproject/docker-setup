@@ -39,7 +39,7 @@ CACHES['default']['OPTIONS']['PASSWORD'] = CACHES['content']['OPTIONS']['PASSWOR
 # URL Setup
 INYOKA_URI_SCHEME = 'https'
 BASE_DOMAIN_NAME = '{{ config "inyoka-base-domain" }}'
-SESSION_COOKIE_DOMAIN = '.%s' % BASE_DOMAIN_NAME
+SESSION_COOKIE_DOMAIN = f'.{BASE_DOMAIN_NAME}'
 MEDIA_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-media-domain" }}/'
 STATIC_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-static-domain" }}/'
 ALLOWED_HOSTS = [SESSION_COOKIE_DOMAIN]
@@ -48,14 +48,14 @@ ALLOWED_HOSTS = [SESSION_COOKIE_DOMAIN]
 SERVER_EMAIL = 'server-%s@ubuntuusers.de' % socket.gethostname().split('.')[0]
 EMAIL_HOST = 'mail.ubuntu-de.org' ## TODO
 DEFAULT_EMAIL_FROM = '@'.join(['no-reply', BASE_DOMAIN_NAME])
-EMAIL_SUBJECT_PREFIX = '%s: ' % BASE_DOMAIN_NAME
+EMAIL_SUBJECT_PREFIX = f'{BASE_DOMAIN_NAME}: '
 INYOKA_SYSTEM_USER_EMAIL = '@'.join(['system', BASE_DOMAIN_NAME])
 INYOKA_CONTACT_EMAIL = '@'.join(['webteam', BASE_DOMAIN_NAME])
 
 # Antispam Setup
 INYOKA_USE_AKISMET = True
 INYOKA_AKISMET_KEY = '{{ secret "inyoka-akismet-key" }}'
-INYOKA_AKISMET_URL = 'http://%s/' % BASE_DOMAIN_NAME
+INYOKA_AKISMET_URL = f'http://{BASE_DOMAIN_NAME}/'
 INYOKA_AKISMET_DEFAULT_IS_SPAM = False
 
 # Forum Surge Protection
@@ -104,7 +104,7 @@ LC_ALL = 'de_DE.UTF-8'
 LANGUAGE_CODE = 'de-de'
 
 # User Setup
-LOGIN_URL = 'https://%s/login' % BASE_DOMAIN_NAME
+LOGIN_URL = f'{INYOKA_URI_SCHEME}://{BASE_DOMAIN_NAME}/login'
 ANONYMOUS_USER_NAME = "anonymous"
 INYOKA_ANONYMOUS_GROUP_NAME = "anonymous"
 INYOKA_IKHAYA_GROUP_NAME = "Ikhayateam"
