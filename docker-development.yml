@@ -28,11 +28,10 @@ services:
       - "ikhaya.ubuntuusers.localhost:127.0.0.1"
       - "static.ubuntuusers.localhost:127.0.0.1"
       - "media.ubuntuusers.localhost:127.0.0.1"
-    # TODO: use gunicorn with --reload?
     command: >
       sh -c "
       /inyoka/venv/bin/python manage.py migrate &&
-      /inyoka/venv/bin/python manage.py runserver 0.0.0.0:8000"
+      /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --reload --workers 1 inyoka.wsgi:application"
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme
       - ./inyoka:/inyoka/code
