@@ -15,6 +15,7 @@ services:
 
   inyoka-worker:
     << : *default-django
+    user: ${SUDO_UID:?uid-needed}:${SUDO_GID:?gid-needed}
     build:
       context: ./
       dockerfile: Dockerfile
@@ -44,13 +45,14 @@ services:
 
   build_statics_theme:
     image: inyokaproject
+    user: root:root
     working_dir: /inyoka/theme
     command: >
       sh -c "
       apt-get install -y --no-install-recommends nodejs npm inotify-tools &&
       /inyoka/venv/bin/python setup.py develop &&
       npm install &&
-      npm run watch"
+      setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups sh -c 'npm run watch'"
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme
 
