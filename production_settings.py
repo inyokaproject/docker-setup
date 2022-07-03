@@ -91,7 +91,7 @@ sentry_sdk.init(
 
 
 # Celery Setup
-redis_password_quoted = urllib.parse.quote('{{ secret "inyoka-redis-password" }}')
+redis_password_quoted = urllib.parse.quote('{{ secret "inyoka-redis-password" }}', safe='')
 CELERY_BROKER_URL = CELERY_RESULT_BACKEND = f'redis://:{redis_password_quoted}@redis:6379/2'
 
 # HTTPS Setup
