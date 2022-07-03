@@ -16,7 +16,7 @@ COPY inyoka /inyoka/code
 WORKDIR /inyoka/code
 RUN python3 -m venv /inyoka/venv
 RUN /inyoka/venv/bin/pip install --no-cache-dir --upgrade pip
-RUN /inyoka/venv/bin/pip install --require-hashes --no-cache-dir -r extra/requirements/development.txt
+RUN /inyoka/venv/bin/pip install --require-hashes --no-cache-dir -r extra/requirements/production.txt
 
 # theme
 COPY theme-ubuntuusers /inyoka/theme
