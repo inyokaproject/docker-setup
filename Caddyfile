@@ -84,18 +84,34 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 # remove www
 # https://caddyserver.com/docs/caddyfile/patterns#redirect-www-subdomain
 www.{{ config "inyoka-base-domain" }} {
-	redir https://{labels.1}.{labels.0}{uri}
-
+	redir https://{{ config "inyoka-base-domain" }}{uri}
 	import common
 }
-www.forum.{{ config "inyoka-base-domain" }},
-www.paste.{{ config "inyoka-base-domain" }},
-www.wiki.{{ config "inyoka-base-domain" }},
-www.planet.{{ config "inyoka-base-domain" }},
-www.ikhaya.{{ config "inyoka-base-domain" }},
-www.{{ config "inyoka-static-domain" }},
+www.forum.{{ config "inyoka-base-domain" }} {
+	redir https://forum.{{ config "inyoka-base-domain" }}{uri}
+	import common
+}
+www.paste.{{ config "inyoka-base-domain" }} {
+	redir https://paste.{{ config "inyoka-base-domain" }}{uri}
+	import common
+}
+www.wiki.{{ config "inyoka-base-domain" }} {
+	redir https://wiki.{{ config "inyoka-base-domain" }}{uri}
+	import common
+}
+www.planet.{{ config "inyoka-base-domain" }} {
+	redir https://planet.{{ config "inyoka-base-domain" }}{uri}
+	import common
+}
+www.ikhaya.{{ config "inyoka-base-domain" }} {
+	redir https://ikhaya.{{ config "inyoka-base-domain" }}{uri}
+	import common
+}
+www.{{ config "inyoka-static-domain" }}  {
+	redir https://{{ config "inyoka-static-domain" }}{uri}
+	import common
+}
 www.{{ config "inyoka-media-domain" }} {
-	redir https://{labels.2}.{labels.1}.{labels.0}{uri}
-
+	redir https://{{ config "inyoka-media-domain" }}{uri}
 	import common
 }
