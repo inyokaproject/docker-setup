@@ -34,6 +34,9 @@
 	file_server /img/favicon.ico {
 		root /srv/www/static
 	}
+}
+
+(static-robots) {
 	file_server /robots.txt {
 		root /srv/www/static
 	}
@@ -52,6 +55,7 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 	reverse_proxy @exclude inyoka-worker:8000
 
 	import common
+	import static-robots
 }
 
 
@@ -77,6 +81,7 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 	}
 
 	import common
+	import static-robots
 	header Access-Control-Allow-Origin "*"
 	header Cache-Control max-age=2592000 # 30 days
 }
