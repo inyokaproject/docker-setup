@@ -21,7 +21,7 @@
 	#}
 
 	handle_errors {
-		root    * /srv/www/templates/
+		root * /srv/www/templates/
 		rewrite * /error_template.html
 		templates
 		file_server
@@ -107,7 +107,7 @@ www.ikhaya.{{ config "inyoka-base-domain" }} {
 	redir https://ikhaya.{{ config "inyoka-base-domain" }}{uri}
 	import common
 }
-www.{{ config "inyoka-static-domain" }}  {
+www.{{ config "inyoka-static-domain" }} {
 	redir https://{{ config "inyoka-static-domain" }}{uri}
 	import common
 }
