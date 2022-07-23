@@ -95,7 +95,7 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
-      - media-files:/srv/www/media
+      - media-files:/srv/www/media:ro
     configs:
       - source: Caddyfile
         target: /etc/caddy/Caddyfile
