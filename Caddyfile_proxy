@@ -59,7 +59,7 @@ http://ikhaya.{{ config "inyoka-base-domain" }} {
 		not path /robots.txt
 	}
 	reverse_proxy @exclude inyoka-worker:8000 {
-		trusted_proxies 192.168.100.31 192.168.100.32
+		trusted_proxies private_ranges
 	}
 
 	import common
