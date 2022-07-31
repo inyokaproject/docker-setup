@@ -1,3 +1,7 @@
+#
+# Special Caddyfile intended for environments
+# where this caddy is already behind a proxy
+#
 # https://caddyserver.com/docs/caddyfile/options
 {
 	admin off
@@ -5,12 +9,14 @@
 	log {
 		format console
 	}
+	auto_https off
 }
 
 (common) {
 	header -Server
 	header Strict-Transport-Security max-age=31536000;
 	header X-Content-Type-Options nosniff
+	#header X-Robots-Tag noindex
 
 	request_body {
 		max_size 10MB
@@ -42,24 +48,26 @@
 	}
 }
 
-{{ config "inyoka-base-domain" }},
-forum.{{ config "inyoka-base-domain" }},
-paste.{{ config "inyoka-base-domain" }},
-wiki.{{ config "inyoka-base-domain" }},
-planet.{{ config "inyoka-base-domain" }},
-ikhaya.{{ config "inyoka-base-domain" }} {
+http://{{ config "inyoka-base-domain" }},
+http://forum.{{ config "inyoka-base-domain" }},
+http://paste.{{ config "inyoka-base-domain" }},
+http://wiki.{{ config "inyoka-base-domain" }},
+http://planet.{{ config "inyoka-base-domain" }},
+http://ikhaya.{{ config "inyoka-base-domain" }} {
 	@exclude {
 		not path /img/favicon.ico
 		not path /robots.txt
 	}
-	reverse_proxy @exclude inyoka-worker:8000
+	reverse_proxy @exclude inyoka-worker:8000 {
+		trusted_proxies private_ranges
+	}
 
 	import common
 	import static-robots
 }
 
 
-{{ config "inyoka-media-domain" }} {
+http://{{ config "inyoka-media-domain" }} {
 	root * /srv/www/media
 	file_server
 
@@ -74,7 +82,7 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 	header @exclude Content-Type application/octet-stream
 }
 
-{{ config "inyoka-static-domain" }} {
+http://{{ config "inyoka-static-domain" }} {
 	root * /srv/www/static
 	file_server {
 		precompressed gzip
@@ -86,37 +94,4 @@ ikhaya.{{ config "inyoka-base-domain" }} {
 	header Cache-Control max-age=2592000 # 30 days
 }
 
-# remove www
-# https://caddyserver.com/docs/caddyfile/patterns#redirect-www-subdomain
-www.{{ config "inyoka-base-domain" }} {
-	redir https://{{ config "inyoka-base-domain" }}{uri}
-	import common
-}
-www.forum.{{ config "inyoka-base-domain" }} {
-	redir https://forum.{{ config "inyoka-base-domain" }}{uri}
-	import common
-}
-www.paste.{{ config "inyoka-base-domain" }} {
-	redir https://paste.{{ config "inyoka-base-domain" }}{uri}
-	import common
-}
-www.wiki.{{ config "inyoka-base-domain" }} {
-	redir https://wiki.{{ config "inyoka-base-domain" }}{uri}
-	import common
-}
-www.planet.{{ config "inyoka-base-domain" }} {
-	redir https://planet.{{ config "inyoka-base-domain" }}{uri}
-	import common
-}
-www.ikhaya.{{ config "inyoka-base-domain" }} {
-	redir https://ikhaya.{{ config "inyoka-base-domain" }}{uri}
-	import common
-}
-www.{{ config "inyoka-static-domain" }} {
-	redir https://{{ config "inyoka-static-domain" }}{uri}
-	import common
-}
-www.{{ config "inyoka-media-domain" }} {
-	redir https://{{ config "inyoka-media-domain" }}{uri}
-	import common
-}
+# www removal redirects are already done on first proxy
