@@ -81,14 +81,9 @@ import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 
+# disable sentry
 sentry_sdk.init(
-    dsn='{{ secret "inyoka-sentry-dsn" }}',
-    integrations=[DjangoIntegration(),CeleryIntegration()],
-    traces_sample_rate=1.0,
-    release=INYOKA_VERSION,
-    environment='staging',
 )
-
 
 # Celery Setup
 redis_password_quoted = urllib.parse.quote('{{ secret "inyoka-redis-password" }}', safe='')
