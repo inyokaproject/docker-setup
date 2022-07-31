@@ -16,7 +16,7 @@
 	header -Server
 	header Strict-Transport-Security max-age=31536000;
 	header X-Content-Type-Options nosniff
-	#header X-Robots-Tag noindex
+	header X-Robots-Tag noindex
 
 	request_body {
 		max_size 10MB
