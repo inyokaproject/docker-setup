@@ -24,12 +24,12 @@ Inside this directory you can run more commands:
 
 Build the inyokaproject image
 ```
-docker build --pull -t inyokaproject:$(git -C inyoka/ describe)--theme-ubuntuusers$(git -C theme-ubuntuusers/ describe) -t inyokaproject:latest .
+docker build --pull -t inyokaproject:$(git -C inyoka/ describe --tags)--theme-ubuntuusers$(git -C theme-ubuntuusers/ describe --tags) -t inyokaproject:latest .
 ```
 
 Build the custom caddy image (that includes the static files for inyoka)
 ```
-docker build -t caddy-inyoka:$(git -C inyoka/ describe)--theme-ubuntuusers$(git -C theme-ubuntuusers/ describe) -t caddy-inyoka:latest --file Dockerfile_caddy .
+docker build -t caddy-inyoka:$(git -C inyoka/ describe --tags)--theme-ubuntuusers$(git -C theme-ubuntuusers/ describe --tags) -t caddy-inyoka:latest --file Dockerfile_caddy .
 ```
 
 Create docker secrets needed for the services
