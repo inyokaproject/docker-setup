@@ -45,8 +45,11 @@ STATIC_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-static-domain" }}/'
 ALLOWED_HOSTS = [SESSION_COOKIE_DOMAIN]
 
 # Mail Setup
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mailcow.lan-cgn'
+EMAIL_PORT = 25
+
 SERVER_EMAIL = 'server-%s@ubuntuusers.de' % socket.gethostname().split('.')[0]
-EMAIL_HOST = 'mail.ubuntu-de.org' ## TODO
 DEFAULT_EMAIL_FROM = '@'.join(['no-reply', BASE_DOMAIN_NAME])
 EMAIL_SUBJECT_PREFIX = f'{BASE_DOMAIN_NAME}: '
 INYOKA_SYSTEM_USER_EMAIL = '@'.join(['system', BASE_DOMAIN_NAME])
