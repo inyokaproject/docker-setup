@@ -48,12 +48,12 @@
 	}
 }
 
-http://{{ config "inyoka-base-domain" }},
-http://forum.{{ config "inyoka-base-domain" }},
-http://paste.{{ config "inyoka-base-domain" }},
-http://wiki.{{ config "inyoka-base-domain" }},
-http://planet.{{ config "inyoka-base-domain" }},
-http://ikhaya.{{ config "inyoka-base-domain" }} {
+http://{{ config "inyoka-base-domain" }}:8080,
+http://forum.{{ config "inyoka-base-domain" }}:8080,
+http://paste.{{ config "inyoka-base-domain" }}:8080,
+http://wiki.{{ config "inyoka-base-domain" }}:8080,
+http://planet.{{ config "inyoka-base-domain" }}:8080,
+http://ikhaya.{{ config "inyoka-base-domain" }}:8080 {
 	@exclude {
 		not path /img/favicon.ico
 		not path /robots.txt
@@ -67,7 +67,7 @@ http://ikhaya.{{ config "inyoka-base-domain" }} {
 }
 
 
-http://{{ config "inyoka-media-domain" }} {
+http://{{ config "inyoka-media-domain" }}:8080 {
 	root * /srv/www/media
 	file_server
 
@@ -82,7 +82,7 @@ http://{{ config "inyoka-media-domain" }} {
 	header @exclude Content-Type application/octet-stream
 }
 
-http://{{ config "inyoka-static-domain" }} {
+http://{{ config "inyoka-static-domain" }}:8080 {
 	root * /srv/www/static
 	file_server {
 		precompressed gzip
