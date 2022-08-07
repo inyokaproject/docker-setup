@@ -30,7 +30,7 @@ services:
       - "media.ubuntuusers.localhost:127.0.0.1"
     command: >
       sh -c "
-      /inyoka/venv/bin/pip install --require-hashes -r extra/requirements/development.txt &&
+      /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
       /inyoka/venv/bin/python manage.py migrate &&
       setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --reload --workers 1 inyoka.wsgi:application"
     volumes:
@@ -41,14 +41,14 @@ services:
     << : *default-django
     command: >
       sh -c "
-      /inyoka/venv/bin/pip install --require-hashes -r extra/requirements/development.txt &&
+      /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
       setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/celery worker --app=inyoka --loglevel=INFO --concurrency=8"
 
   celerybeat:
     << : *default-django
     command: >
       sh -c "
-      /inyoka/venv/bin/pip install --require-hashes -r extra/requirements/development.txt &&
+      /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
       setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/celery beat --app=inyoka --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /tmp/celerybeat-schedule"
 
   build_statics_theme:
