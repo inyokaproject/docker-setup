@@ -1,4 +1,4 @@
-FROM python:3.8.13-slim-bullseye AS inyoka_base
+FROM python:3.8.14-slim-bullseye AS inyoka_base
 # 3.9 causes problems with feedparser
 # 3.10 not offically supported by django 2.2
 
