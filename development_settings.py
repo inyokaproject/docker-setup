@@ -1,15 +1,19 @@
 from inyoka import INYOKA_VERSION
 from production_settings import *
 
-INTERNAL_IPS = ('0.0.0.0/0',)
-
 DEBUG = DEBUG_PROPAGATE_EXCEPTIONS = True
+
+# idea via https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#internal-ips
+import socket
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
+for ip in ips:
+    for i in range(0, 20):
+        INTERNAL_IPS += [ip[: ip.rfind(".")] + "." + str(i)]
 
 # url settings
 #ADMIN_MEDIA_PREFIX = STATIC_URL + '/_admin/'
 INYOKA_HOST_STATICS = True
-
-STATIC_ROOT = '/inyoka/theme/inyoka_theme_ubuntuusers/static' ## TODO
 
 INYOKA_USE_AKISMET = False
 
@@ -22,3 +26,8 @@ EMAIL_PORT = 1025
 
 # disable sentry
 sentry_sdk.init()
+
+# Django Debug Toolbar Integration
+MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+INSTALLED_APPS += ('debug_toolbar',)
+

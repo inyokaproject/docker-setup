@@ -1,4 +1,4 @@
-FROM python:3.8.13-slim-bullseye AS inyoka_base
+FROM python:3.8.14-slim-bullseye AS inyoka_base
 # 3.9 causes problems with feedparser
 # 3.10 not offically supported by django 2.2
 
@@ -16,7 +16,7 @@ COPY inyoka /inyoka/code
 WORKDIR /inyoka/code
 RUN python3 -m venv /inyoka/venv
 RUN /inyoka/venv/bin/pip install --no-cache-dir --upgrade pip
-RUN /inyoka/venv/bin/pip install --require-hashes --no-cache-dir -r extra/requirements/production.txt
+RUN /inyoka/venv/bin/pip install --no-deps --require-hashes --no-cache-dir -r extra/requirements/production.txt
 
 # theme
 COPY theme-ubuntuusers /inyoka/theme
@@ -36,6 +36,8 @@ RUN apt-get install -y --no-install-recommends nodejs npm
 RUN npm ci
 RUN npm run all
 WORKDIR /inyoka/code
+# create small temporary development settings file, so collectstatic can run
+RUN printf "from inyoka.default_settings import *\nSECRET_KEY = 'docker'\nINSTALLED_APPS += ('inyoka_theme_ubuntuusers',)" > development_settings.py
 RUN /inyoka/venv/bin/python manage.py collectstatic --noinput
 
 

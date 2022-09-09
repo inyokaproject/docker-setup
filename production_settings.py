@@ -25,7 +25,6 @@ INSTALLED_APPS += (
 
 # Location of Media and Static Files
 MEDIA_ROOT = '/srv/www/media'
-STATIC_ROOT = '/srv/www/static'
 
 # Debug disabled on Production!
 DEBUG = TEMPLATE_DEBUG = DATABASE_DEBUG = False
