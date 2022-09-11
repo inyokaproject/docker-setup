@@ -76,6 +76,8 @@ services:
        mode: 0440
     secrets:
       - inyoka-redis-password
+    volumes:
+      - redis-data:/data
 
   celeryworker:
     << : *default-django
@@ -144,6 +146,7 @@ secrets:
 volumes:
   celerybeat-schedule: {}
   postgres-data: {}
+  redis-data: {}
   media-files: {}
   caddy_data: {}
   caddy_config: {}
