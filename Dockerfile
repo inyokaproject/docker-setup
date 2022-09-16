@@ -1,5 +1,4 @@
-FROM python:3.8.14-slim-bullseye AS inyoka_base
-# 3.9 causes problems with feedparser
+FROM python:3.9.14-slim-bullseye AS inyoka_base
 # 3.10 not offically supported by django 2.2
 
 # ARG 'is not persisted in the final image' see https://docs.docker.com/engine/reference/builder/#env
