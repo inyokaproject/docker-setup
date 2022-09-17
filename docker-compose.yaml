@@ -82,12 +82,12 @@ services:
   celeryworker:
     << : *default-django
     restart: always
-    command: /inyoka/venv/bin/celery worker --app=inyoka --loglevel=INFO --concurrency=8
+    command: /inyoka/venv/bin/celery --app=inyoka worker --loglevel=INFO --concurrency=8
 
   celerybeat:
     << : *default-django
     restart: always
-    command: /inyoka/venv/bin/celery beat --app=inyoka --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /volume/celerybeat-schedule/celerybeat-schedule
+    command: /inyoka/venv/bin/celery --app=inyoka beat --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /volume/celerybeat-schedule/celerybeat-schedule
     volumes:
       - celerybeat-schedule:/volume/celerybeat-schedule
 
