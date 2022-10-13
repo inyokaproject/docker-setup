@@ -1,4 +1,4 @@
-FROM caddy:2.6.1-alpine
+FROM caddy:2.6.2-alpine
 
 COPY --from=inyokaproject /inyoka/code/inyoka/static-collected /srv/www/static/
 
