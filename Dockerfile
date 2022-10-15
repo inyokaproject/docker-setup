@@ -1,4 +1,4 @@
-FROM python:3.9.15-slim-bullseye AS inyoka_base
+FROM python:3.10.0-slim-bullseye AS inyoka_base
 # 3.10 not offically supported by django 2.2
 
 # ARG 'is not persisted in the final image' see https://docs.docker.com/engine/reference/builder/#env
