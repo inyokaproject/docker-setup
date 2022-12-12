@@ -106,6 +106,16 @@ services:
       - inyoka-media-domain
       - inyoka-static-domain
 
+  clamav:
+    image: clamav/clamav:0.105
+    deploy:
+      resources:
+        limits:
+          memory: 4GB
+    volumes:
+      - media-files:/srv/www/media
+#    configs:
+#      - 
 
 configs:
   inyoka-config:
