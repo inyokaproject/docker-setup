@@ -107,10 +107,11 @@ services:
       - inyoka-static-domain
 
   clamav:
-    image: clamav/clamav:0.105
+    image: clamav/clamav:1.0
     deploy:
       resources:
         limits:
+          cpus: '1.0'
           memory: 4GB
     volumes:
       - media-files:/srv/www/media

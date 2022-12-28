@@ -153,7 +153,7 @@ Other notes
  * [Supported Debian releases](https://wiki.debian.org/DebianReleases#Production_Releases)
  * [Alpine releases](https://alpinelinux.org/releases/)
  * [Caddy releases](https://github.com/caddyserver/caddy/releases) ([Feed](https://github.com/caddyserver/caddy/releases.atom))
- * [Clamav releases](https://www.clamav.net/downloads) ([Feed](https://github.com/Cisco-Talos/clamav/tags))
+ * [Clamav releases](https://www.clamav.net/downloads) ([Feed](https://github.com/Cisco-Talos/clamav/releases.atom))
  * [Python releases](https://www.python.org/downloads/) ([Feed](https://github.com/python/cpython/releases.atom))
  * [Redis releases](https://github.com/redis/redis/releases) ([Feed](https://github.com/redis/redis/releases.atom))
  * [Supported postgreSQL releases](https://www.postgresql.org/support/versioning/) ([Feed](https://www.postgresql.org/news/pgsql.rss))
