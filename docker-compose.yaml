@@ -62,7 +62,7 @@ services:
     restart: always
     expose:
       - "8000/tcp"
-    command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 8 --max-requests 500 inyoka.wsgi:application
+    command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 24 --max-requests 500 inyoka.wsgi:application
 
   redis:
     image: redis:6.2.8-alpine
