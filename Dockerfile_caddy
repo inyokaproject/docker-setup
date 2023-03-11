@@ -1,4 +1,4 @@
-FROM caddy:2.6.4-alpine
+FROM docker.io/library/caddy:2.6.4-alpine
 
 COPY --from=inyokaproject /inyoka/code/inyoka/static-collected /srv/www/static/
 
