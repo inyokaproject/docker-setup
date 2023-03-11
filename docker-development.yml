@@ -11,6 +11,9 @@ x-django:
   configs:
     - source: inyoka-dev-config
       target: /inyoka/code/development_settings.py
+  volumes:
+    - ./theme-ubuntuusers:/inyoka/theme
+    - ./inyoka:/inyoka/code
 
 services:
 
@@ -34,9 +37,6 @@ services:
       /inyoka/venv/bin/python manage.py migrate &&
       chown ${SUDO_UID:?uid}:${SUDO_GID:?gid} inyoka.log celery.log &&
       setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --reload --workers 1 inyoka.wsgi:application"
-    volumes:
-      - ./theme-ubuntuusers:/inyoka/theme
-      - ./inyoka:/inyoka/code
 
   celeryworker:
     << : *default-django
