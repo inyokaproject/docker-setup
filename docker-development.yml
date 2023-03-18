@@ -11,6 +11,9 @@ x-django:
   configs:
     - source: inyoka-dev-config
       target: /inyoka/code/development_settings.py
+  volumes:
+    - ./theme-ubuntuusers:/inyoka/theme
+    - ./inyoka:/inyoka/code
 
 services:
 
@@ -34,9 +37,6 @@ services:
       /inyoka/venv/bin/python manage.py migrate &&
       chown ${SUDO_UID:?uid}:${SUDO_GID:?gid} inyoka.log celery.log &&
       setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --reload --workers 1 inyoka.wsgi:application"
-    volumes:
-      - ./theme-ubuntuusers:/inyoka/theme
-      - ./inyoka:/inyoka/code
 
   celeryworker:
     << : *default-django
@@ -44,7 +44,7 @@ services:
       sh -c "
       /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
       chown ${SUDO_UID:?uid}:${SUDO_GID:?gid} inyoka.log celery.log &&
-      setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/celery worker --app=inyoka --loglevel=INFO --concurrency=8"
+      setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/celery --app=inyoka worker --loglevel=INFO --concurrency=8"
 
   celerybeat:
     << : *default-django
@@ -52,7 +52,7 @@ services:
       sh -c "
       /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
       chown ${SUDO_UID:?uid}:${SUDO_GID:?gid} inyoka.log celery.log &&
-      setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/celery beat --app=inyoka --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /tmp/celerybeat-schedule"
+      setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/celery --app=inyoka beat --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /tmp/celerybeat-schedule"
 
   build_statics_theme:
     image: inyokaproject

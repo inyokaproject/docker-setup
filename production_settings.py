@@ -112,4 +112,4 @@ INYOKA_INTERWIKI_CSS_PATH = join(MEDIA_ROOT, 'linkmap/linkmap-{hash}.css')
 
 FORUM_DISABLE_POSTING = False
 
-CELERY_EAGER_PROPAGATES_EXCEPTIONS = True ## TODO
+CELERY_TASK_EAGER_PROPAGATES = True # https://docs.celeryq.dev/en/stable/userguide/configuration.html#task-eager-propagates
