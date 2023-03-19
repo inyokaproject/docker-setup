@@ -1,6 +1,12 @@
 FROM docker.io/library/python:3.9.16-slim-bullseye AS inyoka_base
 # 3.10 not offically supported by django 2.2
 
+LABEL org.opencontainers.image.source=https://github.com/inyokaproject/docker-setup
+LABEL org.opencontainers.image.description="Inyoka container image"
+LABEL org.opencontainers.image.licenses=BSD-3-Clause
+LABEL org.opencontainers.image.title=Inyoka
+LABEL org.opencontainers.image.vendor="Inyoka Team"
+
 # ARG 'is not persisted in the final image' see https://docs.docker.com/engine/reference/builder/#env
 ARG DEBIAN_FRONTEND=noninteractive
 # from https://docs.docker.com/samples/django/
