@@ -65,7 +65,7 @@ jobs:
         password: ${{ secrets.GITEA_TOKEN }}
 
     - name: Build Inyoka image and push to own container registry
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v4
       id: docker_build_inyoka
       with:
         context: .
@@ -75,7 +75,7 @@ jobs:
         push: true
 
     - name: Build customized caddy image and push to own container registry
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v4
       id: docker_build_caddy
       with:
         context: .
