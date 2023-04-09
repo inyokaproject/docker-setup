@@ -34,6 +34,7 @@ jobs:
         ref: ${{ inputs.branch }}
         path: inyoka
         persist-credentials: false
+        fetch-depth: 0
 
     - name: Checkout theme repo
       uses: actions/checkout@v3
@@ -43,6 +44,7 @@ jobs:
         ref: ${{ inputs.branch }}
         path: theme-ubuntuusers
         persist-credentials: false
+        fetch-depth: 0
 
     - name: Get inyoka version string
       run: echo "INYOKA_VERSION=$(git -C inyoka/ describe --tags)--theme-ubuntuusers$(git -C theme-ubuntuusers/ describe --tags)" >> $GITHUB_ENV
