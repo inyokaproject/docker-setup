@@ -70,7 +70,7 @@ jobs:
         tags: |
           ${{ env.REGISTRY }}/ubuntuusers/inyokaproject:${{ env.INYOKA_VERSION }}
           ${{ env.REGISTRY }}/ubuntuusers/inyokaproject:${{ env.INYOKA_TAG }}
-      push: true
+        push: true
 
     - name: Build customized caddy image and push to own container registry
       uses: docker/build-push-action@v2
@@ -81,7 +81,7 @@ jobs:
           ${{ env.REGISTRY }}/ubuntuusers/caddy-inyoka:${{ env.INYOKA_VERSION }}
           ${{ env.REGISTRY }}/ubuntuusers/caddy-inyoka:${{ env.INYOKA_TAG }}
         file: Dockerfile_caddy
-      push: true
+        push: true
 
     - name: Image digests
       run: |
