@@ -1,0 +1,89 @@
+name: Inyoka - Build docker images
+
+on:
+  # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_dispatchinputs
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Which branch to build container for'
+        required: true
+        type: choice
+        options:
+        - staging
+        - master
+
+env:
+  REGISTRY: git.ubuntu-eu.org
+
+jobs:
+  build-and-push-image:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout inyoka docker repo
+      uses: actions/checkout@v3
+      with:
+        persist-credentials: false
+
+    - name: Checkout inyoka repo
+      uses: actions/checkout@v3
+      with:
+        repository: inyokaproject/inyoka
+        ssh-key: ${{ secrets.SSH_KEY_INYOKACI }} # ssh key of inyokaci, read only, see https://docs.github.com/en/actions/reference/encrypted-secrets
+        ref: ${{ inputs.branch }}
+        path: inyoka
+        persist-credentials: false
+
+    - name: Checkout theme repo
+      uses: actions/checkout@v3
+      with:
+        repository: inyokaproject/theme-ubuntuusers
+        ssh-key: ${{ secrets.SSH_KEY_INYOKACI }} # ssh key of inyokaci, read only, see https://docs.github.com/en/actions/reference/encrypted-secrets
+        ref: ${{ inputs.branch }}
+        path: theme-ubuntuusers
+        persist-credentials: false
+
+    - name: Get inyoka version string
+      run: echo "INYOKA_VERSION=$(git -C inyoka/ describe --tags)--theme-ubuntuusers$(git -C theme-ubuntuusers/ describe --tags)" >> $GITHUB_ENV
+
+    - name: Get inyoka tag (master branch)
+      if: ${{ inputs.branch == 'master' }}
+      run: echo "INYOKA_TAG=latest" >> $GITHUB_ENV
+
+    - name: Get inyoka tag (other branches)
+      if: ${{ inputs.branch != 'master' }}
+      run: echo "INYOKA_TAG=${{ inputs.branch }}" >> $GITHUB_ENV
+
+    - name: Log in to own container registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ secrets.GITEA_USERNAME }}
+        password: ${{ secrets.GITEA_TOKEN }}
+
+    - name: Build Inyoka image and push to own container registry
+      uses: docker/build-push-action@v2
+      id: docker_build_inyoka
+      with:
+        context: .
+        tags: |
+          ${{ env.REGISTRY }}/ubuntuusers/inyokaproject:${{ env.INYOKA_VERSION }}
+          ${{ env.REGISTRY }}/ubuntuusers/inyokaproject:${{ env.INYOKA_TAG }}
+      push: true
+
+    - name: Build customized caddy image and push to own container registry
+      uses: docker/build-push-action@v2
+      id: docker_build_caddy
+      with:
+        context: .
+        tags: |
+          ${{ env.REGISTRY }}/ubuntuusers/caddy-inyoka:${{ env.INYOKA_VERSION }}
+          ${{ env.REGISTRY }}/ubuntuusers/caddy-inyoka:${{ env.INYOKA_TAG }}
+        file: Dockerfile_caddy
+      push: true
+
+    - name: Image digests
+      run: |
+        echo "Inyoka: ${{ steps.docker_build_inyoka.outputs.digest }}"
+        echo "Caddy: ${{ steps.docker_build_caddy.outputs.digest }}"
