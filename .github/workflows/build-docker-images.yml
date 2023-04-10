@@ -1,5 +1,8 @@
 name: Inyoka - Build docker images
 
+# how to schedule it manually
+# https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow
+
 on:
   # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_dispatchinputs
   workflow_dispatch:
@@ -19,6 +22,12 @@ jobs:
   build-and-push-image:
 
     runs-on: ubuntu-latest
+
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
 
     steps:
     - name: Checkout inyoka docker repo
@@ -46,6 +55,12 @@ jobs:
         persist-credentials: false
         fetch-depth: 0
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      with:
+        # network=host driver-opt needed to push to local registry
+        driver-opts: network=host
+
     - name: Get inyoka version string
       run: echo "INYOKA_VERSION=$(git -C inyoka/ describe --tags)--theme-ubuntuusers$(git -C theme-ubuntuusers/ describe --tags)" >> $GITHUB_ENV
 
@@ -72,6 +87,7 @@ jobs:
         tags: |
           ${{ env.REGISTRY }}/ubuntuusers/inyokaproject:${{ env.INYOKA_VERSION }}
           ${{ env.REGISTRY }}/ubuntuusers/inyokaproject:${{ env.INYOKA_TAG }}
+          localhost:5000/inyokaproject:${{ env.INYOKA_VERSION }}
         push: true
 
     - name: Build customized caddy image and push to own container registry
@@ -84,7 +100,7 @@ jobs:
           ${{ env.REGISTRY }}/ubuntuusers/caddy-inyoka:${{ env.INYOKA_TAG }}
         file: Dockerfile_caddy
         push: true
-        build-contexts: inyokaproject=docker-image://${{ env.REGISTRY }}/ubuntuusers/inyokaproject:${{ env.INYOKA_TAG }}
+        build-contexts: inyokaproject=docker-image://localhost:5000/inyokaproject:${{ env.INYOKA_VERSION }}
 
     - name: Image digests
       run: |
