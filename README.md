@@ -114,6 +114,7 @@ Set the docker config values like for production. However, adapt the domain name
 echo -n 'ubuntuusers.localhost' | docker config create inyoka-base-domain -
 echo -n 'media.ubuntuusers.localhost' | docker config create inyoka-media-domain -
 echo -n 'static.ubuntuusers.localhost' | docker config create inyoka-static-domain -
+echo -n 'inyoka@localhost' | docker config create caddy-email -
 ```
 
 To create a development setup run
