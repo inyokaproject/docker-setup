@@ -1,5 +1,7 @@
 FROM docker.io/library/caddy:2.6.4-alpine
 
-COPY --from=inyokaproject /inyoka/code/inyoka/static-collected /srv/www/static/
+LABEL org.opencontainers.image.source=https://github.com/inyokaproject/docker-setup
+LABEL org.opencontainers.image.title="Caddy (customized for Inyoka)"
 
+COPY --from=inyokaproject /inyoka/code/inyoka/static-collected /srv/www/static/
 COPY error_template.html /srv/www/templates/

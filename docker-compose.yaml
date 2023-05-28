@@ -2,7 +2,7 @@ version: "3.8" # https://docs.docker.com/compose/compose-file/compose-versioning
 
 x-django:
   &default-django
-  image: inyokaproject
+  image: git.ubuntu-eu.org/ubuntuusers/inyokaproject
   environment:
     DJANGO_SETTINGS_MODULE: production_settings
   secrets:
@@ -26,7 +26,7 @@ services:
     # pin postgres major version to prevent unexpected database migrations
     # debian image is used, as alpine can have problems with locals
     # see https://github.com/docker-library/docs/blob/master/postgres/README.md#locale-customization
-    image: docker.io/library/postgres:14.7-bullseye
+    image: docker.io/library/postgres:14.8-bullseye
     restart: always
     environment:
       POSTGRES_DB: inyoka
@@ -65,7 +65,7 @@ services:
     command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 8 --max-requests 500 -t 60 inyoka.wsgi:application
 
   redis:
-    image: docker.io/library/redis:6.2.11-alpine
+    image: docker.io/library/redis:6.2.12-alpine
     restart: always
     command: redis-server /etc/redis/redis.conf
     configs:
@@ -92,7 +92,7 @@ services:
       - celerybeat-schedule:/volume/celerybeat-schedule
 
   caddy:
-    image: caddy-inyoka
+    image: git.ubuntu-eu.org/ubuntuusers/caddy-inyoka
     restart: unless-stopped
     volumes:
       - caddy_data:/data
