@@ -2,7 +2,7 @@ version: "3.8" # https://docs.docker.com/compose/compose-file/compose-versioning
 
 x-django:
   &default-django
-  image: git.ubuntu-eu.org/ubuntuusers/inyokaproject
+  image: git.ubuntu-eu.org/ubuntuusers/inyokaproject:staging
   environment:
     DJANGO_SETTINGS_MODULE: production_settings
   secrets:
@@ -92,7 +92,7 @@ services:
       - celerybeat-schedule:/volume/celerybeat-schedule
 
   caddy:
-    image: git.ubuntu-eu.org/ubuntuusers/caddy-inyoka
+    image: git.ubuntu-eu.org/ubuntuusers/caddy-inyoka:staging
     restart: unless-stopped
     volumes:
       - caddy_data:/data
