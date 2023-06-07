@@ -75,7 +75,7 @@ docker service ls
 To publish the ports of the web server
 
 ```
-docker service update --publish-add published=80,target=80 --publish-add published=443,target=443 inyoka_caddy
+docker service update --publish-add published=80,target=80 --publish-add published=443,target=443 --publish-add published=443,target=443,protocol=udp inyoka_caddy
 ```
 
 Run migrations (works only on the same machine, where the container runs)
