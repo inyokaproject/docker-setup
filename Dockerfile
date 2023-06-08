@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.9.16-slim-bullseye AS inyoka_base
+FROM docker.io/library/python:3.11.0-slim-bullseye AS inyoka_base
 # 3.10 not offically supported by django 2.2
 
 LABEL org.opencontainers.image.source=https://github.com/inyokaproject/docker-setup
