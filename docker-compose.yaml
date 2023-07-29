@@ -26,7 +26,7 @@ services:
     # pin postgres major version to prevent unexpected database migrations
     # debian image is used, as alpine can have problems with locals
     # see https://github.com/docker-library/docs/blob/master/postgres/README.md#locale-customization
-    image: docker.io/library/postgres:14.8-bullseye
+    image: docker.io/library/postgres:14.8-bookworm
     restart: always
     environment:
       POSTGRES_DB: inyoka
