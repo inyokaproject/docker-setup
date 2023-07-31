@@ -25,7 +25,7 @@ RUN /inyoka/venv/bin/pip install --no-deps --require-hashes --no-cache-dir -r ex
 
 # theme
 COPY theme-ubuntuusers /inyoka/theme
-RUN sh -c 'cd /inyoka/theme && /inyoka/venv/bin/python setup.py develop'
+RUN /inyoka/venv/bin/pip install /inyoka/theme
 
 # remove previously collected statics (could be also symlinks)
 RUN rm -rf /inyoka/code/inyoka/static-collected
