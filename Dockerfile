@@ -42,7 +42,7 @@ RUN npm ci
 RUN npm run all
 WORKDIR /inyoka/code
 # create small temporary development settings file, so collectstatic can run
-RUN printf "from inyoka.default_settings import *\nSECRET_KEY = 'docker'\nINSTALLED_APPS += ('inyoka_theme_ubuntuusers',)" > development_settings.py
+RUN printf "from inyoka.default_settings import *" > development_settings.py
 RUN /inyoka/venv/bin/python manage.py collectstatic --noinput
 
 
