@@ -22,10 +22,11 @@ WORKDIR /inyoka/code
 RUN python3 -m venv /inyoka/venv
 RUN /inyoka/venv/bin/pip install --no-cache-dir --upgrade pip
 RUN /inyoka/venv/bin/pip install --no-deps --require-hashes --no-cache-dir -r extra/requirements/production.txt
+RUN /inyoka/venv/bin/pip install -e /inyoka/code
 
 # theme
 COPY theme-ubuntuusers /inyoka/theme
-RUN /inyoka/venv/bin/pip install /inyoka/theme
+RUN /inyoka/venv/bin/pip install -e /inyoka/theme
 
 # remove previously collected statics (could be also symlinks)
 RUN rm -rf /inyoka/code/inyoka/static-collected

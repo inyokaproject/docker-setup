@@ -62,7 +62,6 @@ services:
       sh -c "
       apt-get update &&
       apt-get install -y --no-install-recommends nodejs npm inotify-tools &&
-      /inyoka/venv/bin/pip install -e . &&
       npm install &&
       setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups npm run watch"
     volumes:
