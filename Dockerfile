@@ -37,13 +37,17 @@ RUN rm -rf /inyoka/code/inyoka/static-collected
 # the build statics will be copied in the next step
 # for Docker multistage-build see https://docs.docker.com/develop/develop-images/multistage-build/
 FROM inyoka_base AS inyoka_with_node
+
+ARG INYOKA_THEME=inyoka_theme_ubuntuusers
+
 WORKDIR /inyoka/theme
 RUN apt-get install -y --no-install-recommends nodejs npm
 RUN npm ci
 RUN npm run all
+
 WORKDIR /inyoka/code
 # create small temporary development settings file, so collectstatic can run
-RUN printf "from inyoka.default_settings import *" > development_settings.py
+RUN printf "from inyoka.default_settings import *\nINSTALLED_APPS += ('${INYOKA_THEME}',)" > development_settings.py
 RUN /inyoka/venv/bin/python manage.py collectstatic --noinput
 
 
