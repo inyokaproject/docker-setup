@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.9.17-slim-bullseye AS inyoka_base
+FROM docker.io/library/python:3.9.18-slim-bookworm AS inyoka_base
 # 3.10 not offically supported by django 2.2
 
 LABEL org.opencontainers.image.source=https://github.com/inyokaproject/docker-setup
@@ -14,7 +14,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends libxml2-dev libxslt1-dev zlib1g-dev libjpeg-dev uuid-dev libfreetype6-dev libpq-dev build-essential libpq-dev libffi-dev wget libmagic1
+RUN apt-get install -y --no-install-recommends libxml2-dev libxslt1-dev zlib1g-dev libjpeg-dev uuid-dev libfreetype6-dev libpq-dev build-essential libpq-dev libffi-dev libmagic1 postgresql-client
 
 # inyoka
 COPY inyoka /inyoka/code
@@ -22,10 +22,11 @@ WORKDIR /inyoka/code
 RUN python3 -m venv /inyoka/venv
 RUN /inyoka/venv/bin/pip install --no-cache-dir --upgrade pip
 RUN /inyoka/venv/bin/pip install --no-deps --require-hashes --no-cache-dir -r extra/requirements/production.txt
+RUN /inyoka/venv/bin/pip install -e /inyoka/code
 
 # theme
 COPY theme-ubuntuusers /inyoka/theme
-RUN sh -c 'cd /inyoka/theme && /inyoka/venv/bin/python setup.py develop'
+RUN /inyoka/venv/bin/pip install -e /inyoka/theme
 
 # remove previously collected statics (could be also symlinks)
 RUN rm -rf /inyoka/code/inyoka/static-collected
@@ -36,13 +37,17 @@ RUN rm -rf /inyoka/code/inyoka/static-collected
 # the build statics will be copied in the next step
 # for Docker multistage-build see https://docs.docker.com/develop/develop-images/multistage-build/
 FROM inyoka_base AS inyoka_with_node
+
+ARG INYOKA_THEME=inyoka_theme_ubuntuusers
+
 WORKDIR /inyoka/theme
 RUN apt-get install -y --no-install-recommends nodejs npm
 RUN npm ci
 RUN npm run all
+
 WORKDIR /inyoka/code
 # create small temporary development settings file, so collectstatic can run
-RUN printf "from inyoka.default_settings import *\nSECRET_KEY = 'docker'\nINSTALLED_APPS += ('inyoka_theme_ubuntuusers',)" > development_settings.py
+RUN printf "from inyoka.default_settings import *\nINSTALLED_APPS += ('${INYOKA_THEME}',)" > development_settings.py
 RUN /inyoka/venv/bin/python manage.py collectstatic --noinput
 
 
