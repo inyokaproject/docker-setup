@@ -8,7 +8,7 @@ import urllib.parse
 # Database Setup
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'inyoka',
         'USER': 'inyoka',
         'PASSWORD': '{{ secret "inyoka-postgres-password" }}',
