@@ -88,7 +88,7 @@ sentry_sdk.init(
     integrations=[DjangoIntegration(),CeleryIntegration()],
     traces_sample_rate=1.0,
     release=INYOKA_VERSION,
-    environment='staging',
+    environment='production',
 )
 
 
