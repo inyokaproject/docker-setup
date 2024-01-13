@@ -52,7 +52,7 @@ SERVER_EMAIL = 'server-%s@ubuntuusers.de' % socket.gethostname().split('.')[0]
 DEFAULT_EMAIL_FROM = '@'.join(['no-reply', BASE_DOMAIN_NAME])
 EMAIL_SUBJECT_PREFIX = f'{BASE_DOMAIN_NAME}: '
 INYOKA_SYSTEM_USER_EMAIL = '@'.join(['system', BASE_DOMAIN_NAME])
-INYOKA_CONTACT_EMAIL = '@'.join(['webteam', BASE_DOMAIN_NAME])
+INYOKA_CONTACT_EMAIL = '@'.join(['team', BASE_DOMAIN_NAME])
 
 # Antispam Setup
 INYOKA_USE_AKISMET = True
