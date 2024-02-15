@@ -141,7 +141,7 @@ To create a development setup run
 
 ```
 # needed as docker stack does not overwrite 'command' (instead the one from docker-development gets appendeded), see https://github.com/docker/cli/issues/1651#issuecomment-467759678
-docker compose -f docker-compose.yaml -f docker-development.yml config | tail -n +2 | { echo 'version: "3.8"'; cat -; } | docker stack deploy -c - inyoka-dev
+docker compose -f docker-compose.yaml -f docker-development.yml config | tail -n +2 | { echo 'version: "3.8"'; cat -; } | docker stack deploy -c - inyoka-dev --with-registry-auth
 docker service update --publish-add published=80,target=8000 --publish-add published=8443,target=443 inyoka-dev_caddy
 ```
 
