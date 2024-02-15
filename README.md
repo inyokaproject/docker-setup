@@ -129,6 +129,13 @@ docker secret create inyoka-akismet-key /path/to/file_with_secret/
  echo -n 'https://examplePublicKey@localhost/0' | docker secret create inyoka-sentry-dsn -
 ```
 
+Login to Inyoka-Docker Source
+
+if you don't build the container on your system and have access to the inyoka-contianer repository, you have to login first:
+
+```
+docker login https://git.ubuntu-eu.org
+```
 
 To create a development setup run
 
