@@ -114,22 +114,43 @@ Set the docker config values like for production. However, adapt the domain name
 echo -n 'ubuntuusers.localhost' | docker config create inyoka-base-domain -
 echo -n 'media.ubuntuusers.localhost' | docker config create inyoka-media-domain -
 echo -n 'static.ubuntuusers.localhost' | docker config create inyoka-static-domain -
+echo -n 'inyoka@localhost' | docker config create caddy-email -
+```
+
+
+Create docker secrets needed for the services
+
+```
+openssl rand -base64 32 | tr -d '\n' | docker secret create inyoka-postgres-password -
+openssl rand -base64 32 | tr -d '\n' | docker secret create inyoka-redis-password -
+openssl rand -base64 32 | tr -d '\n' | docker secret create inyoka-secret-key -
+docker secret create inyoka-akismet-key /path/to/file_with_secret/
+# note the space at the start of the command to prevent the secret in the shell history
+ echo -n 'https://examplePublicKey@localhost/0' | docker secret create inyoka-sentry-dsn -
+```
+
+Login to Inyoka-Docker Source
+
+if you don't build the container on your system and have access to the inyoka-container repository, you have to login first:
+
+```
+docker login https://git.ubuntu-eu.org
 ```
 
 To create a development setup run
 
 ```
 # needed as docker stack does not overwrite 'command' (instead the one from docker-development gets appendeded), see https://github.com/docker/cli/issues/1651#issuecomment-467759678
-docker compose -f docker-compose.yaml -f docker-development.yml config | tail -n +2 | { echo 'version: "3.8"'; cat -; } | docker stack deploy -c - inyoka-dev
+docker compose -f docker-compose.yaml -f docker-development.yml config | tail -n +2 | { echo 'version: "3.8"'; cat -; } | docker stack deploy -c - inyoka-dev --with-registry-auth
 docker service update --publish-add published=80,target=80 --publish-add published=443,target=443 inyoka-dev_caddy
 ```
 
 You should now be able to visit `ubuntuusers.localhost:8000` in your browser.
 
  * To create some testdata execute  
-   ```docker exec -it <container> /inyoka/venv/bin/python ./make_testdata.py```
+   ```docker exec -it <inyoka_workercontainer> /inyoka/venv/bin/python ./make_testdata.py```
  * To create a superuser account named `admin` execute  
-   ```docker exec -it <container> /inyoka/venv/bin/python manage.py create_superuser --username admin --email 'admin@localhost'```
+   ```docker exec -it <inyoka_workercontainer> /inyoka/venv/bin/python manage.py create_superuser --username admin --email 'admin@localhost'```
 
  * E-Mail logs can be seen via `docker service logs inyoka-dev_smtpd`
 
