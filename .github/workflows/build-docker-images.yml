@@ -47,7 +47,7 @@ jobs:
         fetch-depth: 0
 
     - name: Checkout theme repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: inyokaproject/theme-ubuntuusers
         ssh-key: ${{ secrets.SSH_KEY_INYOKACI }} # ssh key of inyokaci, read only, see https://docs.github.com/en/actions/reference/encrypted-secrets
