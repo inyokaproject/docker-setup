@@ -1,5 +1,3 @@
-version: "3.8" # https://docs.docker.com/compose/compose-file/compose-versioning/
-
 x-django:
   &default-django
   image: git.ubuntu-eu.org/ubuntuusers/inyokaproject
