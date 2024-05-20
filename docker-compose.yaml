@@ -47,19 +47,9 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
-#  database-migration:
-#    << : *default-django
-#    command: /inyoka/venv/bin/python manage.py migrate
-#    depends_on:
-#      - postgres
-#    profiles:
-#      - maintenance
-
   inyoka-worker:
     << : *default-django
     restart: always
-    expose:
-      - "8000/tcp"
     command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 24 --max-requests 500 inyoka.wsgi:application
 
   redis:
