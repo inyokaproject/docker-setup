@@ -15,10 +15,17 @@ x-django:
     - ./theme-ubuntuusers:/inyoka/theme
     - ./inyoka:/inyoka/code
 
+x-user:
+  &user-ids
+  environment:
+    INYOKA_GID: 100
+    INYOKA_UID: 1000
+
 services:
 
   inyoka-worker:
     << : *default-django
+    << : *user-ids
     build:
       context: ./
       dockerfile: Dockerfile
@@ -35,26 +42,29 @@ services:
       sh -c "
       /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
       /inyoka/venv/bin/python manage.py migrate &&
-      chown ${SUDO_UID:?uid}:${SUDO_GID:?gid} inyoka.log celery.log &&
-      setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --reload --workers 1 inyoka.wsgi:application"
+      chown $$INYOKA_UID:$$INYOKA_GID inyoka.log celery.log /srv/www/media &&
+      setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --reload --workers 1 inyoka.wsgi:application"
 
   celeryworker:
     << : *default-django
+    << : *user-ids
     command: >
       sh -c "
       /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
-      chown ${SUDO_UID:?uid}:${SUDO_GID:?gid} inyoka.log celery.log &&
-      setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/celery --app=inyoka worker --loglevel=INFO --concurrency=8"
+      chown $$INYOKA_UID:$$INYOKA_GID inyoka.log celery.log &&
+      setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups /inyoka/venv/bin/celery --app=inyoka worker --loglevel=INFO --concurrency=8"
 
   celerybeat:
     << : *default-django
+    << : *user-ids
     command: >
       sh -c "
       /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
-      chown ${SUDO_UID:?uid}:${SUDO_GID:?gid} inyoka.log celery.log &&
-      setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups /inyoka/venv/bin/celery --app=inyoka beat --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /tmp/celerybeat-schedule"
+      chown $$INYOKA_UID:$$INYOKA_GID inyoka.log celery.log /volume/celerybeat-schedule/ &&
+      setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups /inyoka/venv/bin/celery --app=inyoka beat --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /tmp/celerybeat-schedule"
 
   build_statics_theme:
+    << : *user-ids
     image: git.ubuntu-eu.org/ubuntuusers/inyokaproject
     user: root:root
     working_dir: /inyoka/theme
@@ -63,20 +73,21 @@ services:
       apt-get update &&
       apt-get install -y --no-install-recommends nodejs npm inotify-tools &&
       npm install &&
-      setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups npm run watch"
+      setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups npm run watch"
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme
 
   copy_statics:
     image: git.ubuntu-eu.org/ubuntuusers/inyokaproject
     << : *default-django
+    << : *user-ids
     command: >
       sh -c "
       apt-get update &&
       apt-get install -y --no-install-recommends inotify-tools &&
       /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
-      chown ${SUDO_UID:?uid}:${SUDO_GID:?gid} inyoka.log celery.log &&
-      setpriv --reuid=${SUDO_UID:?uid} --regid=${SUDO_GID:?gid} --clear-groups bash -c 'while true; do /inyoka/venv/bin/python manage.py collectstatic --noinput --clear; inotifywait --quiet --recursive --event modify /inyoka/theme/inyoka_theme_ubuntuusers/static/; done'"
+      chown $$INYOKA_UID:$$INYOKA_GID inyoka.log celery.log &&
+      setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups bash -c 'while true; do /inyoka/venv/bin/python manage.py collectstatic --noinput --clear; inotifywait --quiet --recursive --event modify /inyoka/theme/inyoka_theme_ubuntuusers/static/; done'"
     volumes:
       - ./theme-ubuntuusers:/inyoka/theme:ro
       - ./inyoka/inyoka/static-collected:/inyoka/code/inyoka/static-collected
