@@ -20,9 +20,7 @@ INYOKA_USE_AKISMET = False
 # Language code
 LANGUAGE_CODE = 'de-DE'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtpd'
-EMAIL_PORT = 1025
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # disable sentry
 sentry_sdk.init()
