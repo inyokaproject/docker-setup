@@ -1,11 +1,9 @@
 # fragment for development setups
 # https://docs.docker.com/compose/extends/
 
-x-django:
-  &default-django
+x-dev-django:
+  &dev-django
   user: root:root
-  environment:
-    DJANGO_SETTINGS_MODULE: development_settings
   configs:
     - source: inyoka-dev-config
       target: /inyoka/code/development_settings.py
@@ -13,20 +11,21 @@ x-django:
     - ./theme-ubuntuusers:/inyoka/theme
     - ./inyoka:/inyoka/code
 
-x-user:
-  &user-ids
-  environment:
-    INYOKA_GID: 100
-    INYOKA_UID: 1000
+x-dev-env:
+  &dev-env
+  INYOKA_GID: 100
+  INYOKA_UID: 1000
+  DJANGO_SETTINGS_MODULE: development_settings
 
 services:
 
   inyoka-worker:
-    << : *default-django
-    << : *user-ids
+    << : *dev-django
     build:
       context: ./
       dockerfile: Dockerfile
+    environment:
+      << : *dev-env
     extra_hosts:
       - "ubuntuusers.localhost:127.0.0.1"
       - "forum.ubuntuusers.localhost:127.0.0.1"
@@ -44,8 +43,9 @@ services:
       setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --reload --workers 1 inyoka.wsgi:application"
 
   celeryworker:
-    << : *default-django
-    << : *user-ids
+    << : *dev-django
+    environment:
+      <<: *dev-env
     command: >
       sh -c "
       /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
@@ -53,8 +53,9 @@ services:
       setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups /inyoka/venv/bin/celery --app=inyoka worker --loglevel=INFO --concurrency=8"
 
   celerybeat:
-    << : *default-django
-    << : *user-ids
+    << : *dev-django
+    environment:
+      <<: *dev-env
     command: >
       sh -c "
       /inyoka/venv/bin/pip install --no-deps --require-hashes -r extra/requirements/development.txt &&
@@ -62,9 +63,10 @@ services:
       setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups /inyoka/venv/bin/celery --app=inyoka beat --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /tmp/celerybeat-schedule"
 
   build_statics_theme:
-    << : *user-ids
     image: git.ubuntu-eu.org/ubuntuusers/inyokaproject
     user: root:root
+    environment:
+      <<: *dev-env
     working_dir: /inyoka/theme
     command: >
       sh -c "
@@ -77,8 +79,9 @@ services:
 
   copy_statics:
     image: git.ubuntu-eu.org/ubuntuusers/inyokaproject
-    << : *default-django
-    << : *user-ids
+    << : *dev-django
+    environment:
+      <<: *dev-env
     command: >
       sh -c "
       apt-get update &&
