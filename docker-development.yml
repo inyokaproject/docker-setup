@@ -3,6 +3,7 @@
 
 x-dev-django:
   &dev-django
+  image: git.ubuntu-eu.org/ubuntuusers/inyokaproject:staging
   user: root:root
   configs:
     - source: inyoka-dev-config
@@ -63,7 +64,7 @@ services:
       setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups /inyoka/venv/bin/celery --app=inyoka beat --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /tmp/celerybeat-schedule"
 
   build_statics_theme:
-    image: git.ubuntu-eu.org/ubuntuusers/inyokaproject
+    image: git.ubuntu-eu.org/ubuntuusers/inyokaproject:staging
     user: root:root
     environment:
       <<: *dev-env
@@ -78,7 +79,6 @@ services:
       - ./theme-ubuntuusers:/inyoka/theme
 
   copy_statics:
-    image: git.ubuntu-eu.org/ubuntuusers/inyokaproject
     << : *dev-django
     environment:
       <<: *dev-env
@@ -108,6 +108,7 @@ services:
       - inyoka-sentry-dsn
 
   caddy:
+   image: git.ubuntu-eu.org/ubuntuusers/caddy-inyoka:staging
    volumes:
      - ./inyoka/inyoka/static-collected:/srv/www/static/:ro
 

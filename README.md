@@ -96,12 +96,14 @@ Start the stack
 ```
 docker stack deploy -c docker-compose.yaml -c docker-development.yml inyoka-dev --with-registry-auth
 ```
+For development container-images with tag `staging` are used.
+
 
  - for _production_  
 ```
 docker stack deploy -c docker-compose.yaml inyoka --with-registry-auth
 ```
-
+For production the container-images with tag `latest` are used.
 
 
 Service status
