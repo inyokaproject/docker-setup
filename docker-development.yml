@@ -22,9 +22,6 @@ services:
 
   inyoka-worker:
     << : *dev-django
-    build:
-      context: ./
-      dockerfile: Dockerfile
     environment:
       << : *dev-env
     extra_hosts:
