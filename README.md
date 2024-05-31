@@ -94,14 +94,14 @@ Start the stack
 
  - for _development_  
 ```
-docker stack deploy -c docker-compose.yaml -c docker-development.yml inyoka-dev --with-registry-auth
+docker stack deploy -c docker-compose.yaml -c docker-development.yml inyoka-dev --with-registry-auth --detach=false
 ```
 For development container-images with tag `staging` are used.
 
 
  - for _production_  
 ```
-docker stack deploy -c docker-compose.yaml inyoka --with-registry-auth
+docker stack deploy -c docker-compose.yaml inyoka --with-registry-auth --detach=false
 ```
 For production the container-images with tag `latest` are used.
 
