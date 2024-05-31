@@ -151,8 +151,9 @@ docker service update --publish-add published=80,target=80 --publish-add publish
 
 You should now be able to visit your Inyoka instance in your browser.
 
- - for _development_ use the URL `ubuntuusers.localhost`. Most likely, for development you will see a certificate error,
-   see the section below for details.
+ - for _development_ use the URL `ubuntuusers.localhost`.
+   Most likely, for development you will see a certificate error, see the section below for details.
+   You can use `curl -L --verbose -4 --insecure https://ubuntuusers.localhost/` to see, if a response is generated.
  - for _production_ use your custom URL
 
 
