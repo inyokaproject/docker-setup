@@ -13,6 +13,9 @@ Enable Swarm
   `docker system info | grep Swarm`
  * if not, enable it via `docker swarm init`
 
+Swarm is mainly used as it allows to use Docker secrets and configs.
+Inyoka does not need multiple systems.
+
 Clone repositories
 ------------------
 
