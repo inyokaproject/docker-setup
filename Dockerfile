@@ -1,5 +1,4 @@
-FROM docker.io/library/python:3.9.19-slim-bookworm AS inyoka_base
-# 3.10 not offically supported by django 2.2
+FROM docker.io/library/python:3.12.4-slim-bookworm AS inyoka_base
 
 LABEL org.opencontainers.image.source=https://github.com/inyokaproject/docker-setup
 LABEL org.opencontainers.image.description="Inyoka container image"
