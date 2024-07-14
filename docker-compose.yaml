@@ -1,5 +1,3 @@
-version: "3.8" # https://docs.docker.com/compose/compose-file/compose-versioning/
-
 x-django:
   &default-django
   image: git.ubuntu-eu.org/ubuntuusers/inyokaproject
@@ -27,7 +25,6 @@ services:
     # debian image is used, as alpine can have problems with locals
     # see https://github.com/docker-library/docs/blob/master/postgres/README.md#locale-customization
     image: docker.io/library/postgres:14.12-bookworm
-    restart: always
     environment:
       POSTGRES_DB: inyoka
       # TODO defines superuser name -> do not use superuser from inyoka?
@@ -35,8 +32,6 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/inyoka-postgres-password
       POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
       POSTGRES_INITDB_ARGS: "--data-checksums"
-    # increase shared memory like recommended at https://github.com/docker-library/docs/blob/master/postgres/README.md#caveats
-    shm_size: 256M
     # https://github.com/docker-library/postgres/blob/a83005b407ee6d810413500d8a041c957fb10cf0/14/bullseye/Dockerfile#L211-L213
     # https://www.postgresql.org/docs/14/server-start.html suggests no timeout
     stop_grace_period: 5m
@@ -48,25 +43,21 @@ services:
       - inyoka-postgres-password
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      # increase shared memory like recommended at https://github.com/docker-library/docs/blob/master/postgres/README.md#caveats
+      # shm_size is not supported in docker swarm
+      # workaround: https://github.com/moby/moby/issues/26714#issuecomment-579820612
+      - type: tmpfs
+        target: /dev/shm
+        tmpfs:
+          size: 268435456
 
-#  database-migration:
-#    << : *default-django
-#    command: /inyoka/venv/bin/python manage.py migrate
-#    depends_on:
-#      - postgres
-#    profiles:
-#      - maintenance
 
   inyoka-worker:
     << : *default-django
-    restart: always
-    expose:
-      - "8000/tcp"
     command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 24 --max-requests 500 inyoka.wsgi:application
 
   redis:
     image: docker.io/library/redis:7.0.15-alpine
-    restart: always
     command: redis-server /etc/redis/redis.conf
     configs:
      - source: redis-config
@@ -81,19 +72,16 @@ services:
 
   celeryworker:
     << : *default-django
-    restart: always
     command: /inyoka/venv/bin/celery --app=inyoka worker --loglevel=INFO --concurrency=8
 
   celerybeat:
     << : *default-django
-    restart: always
     command: /inyoka/venv/bin/celery --app=inyoka beat --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /volume/celerybeat-schedule/celerybeat-schedule
     volumes:
       - celerybeat-schedule:/volume/celerybeat-schedule
 
   caddy:
     image: git.ubuntu-eu.org/ubuntuusers/caddy-inyoka
-    restart: unless-stopped
     volumes:
       - caddy_data:/data
       - caddy_config:/config

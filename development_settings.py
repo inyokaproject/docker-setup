@@ -6,7 +6,8 @@ DEBUG = DEBUG_PROPAGATE_EXCEPTIONS = True
 # idea via https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#internal-ips
 import socket
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
+INTERNAL_IPS = ["127.0.0.1"]
+ips += ["10.0.2.2"]
 for ip in ips:
     for i in range(0, 20):
         INTERNAL_IPS += [ip[: ip.rfind(".")] + "." + str(i)]
@@ -20,9 +21,7 @@ INYOKA_USE_AKISMET = False
 # Language code
 LANGUAGE_CODE = 'de-DE'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtpd'
-EMAIL_PORT = 1025
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # disable sentry
 sentry_sdk.init()
