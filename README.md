@@ -62,6 +62,8 @@ Some services need secrets. An example script for development is provided.
    - Adjust the email (used by caddy for ACME)
    - Run the customized script `./production_set_secrets.sh`
 
+(As an alternative consider to setup the secrets via ansible's [community.docker.docker_secret](https://docs.ansible.com/ansible/latest/collections/community/docker/docker_secret_module.html))
+
 
 Development: Adjust the user/group ids
 --------------------------------------
