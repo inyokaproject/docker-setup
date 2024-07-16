@@ -40,7 +40,7 @@ Build container images
 
 If you have access to our container-registry and just want to use a pre-build image, you can skip this step. 
 
-Inside the docker-setup directory execute the script to build the Inyoka docker images:
+Otherwise, executed inside the docker-setup directory the script to build the Inyoka docker images:
 
 ```
 ./build_docker_images.sh
