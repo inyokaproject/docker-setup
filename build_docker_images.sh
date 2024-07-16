@@ -37,4 +37,4 @@ done
 docker build --pull -t inyokaproject:"${inyoka_version}" -t inyokaproject:"${tag}" -t git.ubuntu-eu.org/ubuntuusers/inyokaproject:"${inyoka_version}" -t git.ubuntu-eu.org/ubuntuusers/inyokaproject:"${tag}" .
 
 # Build the custom caddy image (that includes the static files for inyoka)
-docker build -t caddy-inyoka:"${inyoka_version}" -t caddy-inyoka:"${tag}" -t git.ubuntu-eu.org/ubuntuusers/caddy-inyoka:"${inyoka_version}" -t git.ubuntu-eu.org/ubuntuusers/caddy-inyoka:"${tag}" --file Dockerfile_caddy .
+docker build -t caddy-inyoka:"${inyoka_version}" -t caddy-inyoka:"${tag}" -t git.ubuntu-eu.org/ubuntuusers/caddy-inyoka:"${inyoka_version}" -t git.ubuntu-eu.org/ubuntuusers/caddy-inyoka:"${tag}" --file Dockerfile_caddy --build-context git.ubuntu-eu.org/ubuntuusers/inyokaproject=docker-image://inyokaproject:${tag} .
