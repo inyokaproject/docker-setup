@@ -7,6 +7,7 @@ x-django:
     - inyoka-postgres-password
     - inyoka-redis-password
     - inyoka-secret-key
+    - inyoka-secret-key-fallback
     - inyoka-akismet-key
     - inyoka-sentry-dsn
   configs:
@@ -124,6 +125,8 @@ secrets:
   inyoka-redis-password:
     external: true
   inyoka-secret-key:
+    external: true
+  inyoka-secret-key-fallback:
     external: true
   inyoka-akismet-key:
     external: true

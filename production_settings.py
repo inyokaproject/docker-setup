@@ -71,6 +71,10 @@ WIKI_RECENTCHANGES_MAX = 500
 INYOKA_SYSTEM_USER = 'ubuntuusers'
 
 SECRET_KEY = '{{ secret "inyoka-secret-key" }}'
+if '{{ secret "inyoka-secret-key-fallback" }}'.strip():
+    # check fallback key from docker contains a real value
+    # (→ if no fallback keys should be used, set this docker secret to whitespace)
+    SECRET_KEY_FALLBACKS = ['{{ secret "inyoka-secret-key-fallback" }}']
 
 # cookie lifetime (4 weeks)
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7 * 4

@@ -28,6 +28,7 @@ done
 openssl rand -base64 32 | tr -d '\n' | docker secret create inyoka-postgres-password -
 openssl rand -base64 32 | tr -d '\n' | docker secret create inyoka-redis-password -
 openssl rand -base64 32 | tr -d '\n' | docker secret create inyoka-secret-key -
+echo -n ' ' | docker secret create inyoka-secret-key-fallback -
  echo -n ' ' | docker secret create inyoka-akismet-key -
 # note the space at the start of the command to prevent the secret in the shell history
  echo -n 'https://examplePublicKey@localhost/0' | docker secret create inyoka-sentry-dsn -
