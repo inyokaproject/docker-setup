@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.12.4-slim-bookworm AS inyoka_base
+FROM docker.io/library/python:3.13.0rc1-slim-bookworm AS inyoka_base
 
 LABEL org.opencontainers.image.source=https://github.com/inyokaproject/docker-setup
 LABEL org.opencontainers.image.description="Inyoka container image"
