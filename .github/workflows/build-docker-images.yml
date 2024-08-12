@@ -52,7 +52,7 @@ jobs:
         repository: inyokaproject/theme-ubuntuusers
         ssh-key: ${{ secrets.SSH_KEY_INYOKACI }} # ssh key of inyokaci, read only, see https://docs.github.com/en/actions/reference/encrypted-secrets
         ref: ${{ inputs.branch }}
-        path: theme-ubuntuusers
+        path: theme
         persist-credentials: false
         fetch-depth: 0
 
@@ -63,7 +63,7 @@ jobs:
         driver-opts: network=host
 
     - name: Get inyoka version string
-      run: echo "INYOKA_VERSION=$(git -C inyoka/ describe --tags)--theme-ubuntuusers$(git -C theme-ubuntuusers/ describe --tags)" >> $GITHUB_ENV
+      run: echo "INYOKA_VERSION=$(git -C inyoka/ describe --tags)--theme-ubuntuusers$(git -C theme/ describe --tags)" >> $GITHUB_ENV
 
     - name: Get inyoka tag (master branch)
       if: ${{ inputs.branch == 'master' }}
@@ -89,6 +89,7 @@ jobs:
           ${{ env.REGISTRY }}/ubuntuusers/inyokaproject:${{ env.INYOKA_VERSION }}
           ${{ env.REGISTRY }}/ubuntuusers/inyokaproject:${{ env.INYOKA_TAG }}
           localhost:5000/inyokaproject:${{ env.INYOKA_VERSION }}
+        target: inyoka_custom_theme
         push: true
 
     - name: Build customized caddy image and push to own container registry

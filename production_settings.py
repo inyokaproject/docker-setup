@@ -1,3 +1,5 @@
+import os
+
 from inyoka import INYOKA_VERSION
 from inyoka.default_settings import *
 
@@ -18,10 +20,15 @@ DATABASES = {
     }
 }
 
-# Installed Apps with Theme
-INSTALLED_APPS += (
-    'inyoka_theme_ubuntuusers',
-)
+# Installed App with custom theme
+if 'INYOKA_THEME_APP' in os.environ.keys():
+    INSTALLED_APPS += (
+        os.environ['INYOKA_THEME_APP'],
+    )
+    from os.path import join
+    THEME_PATH = f"/inyoka/theme/{os.environ['INYOKA_THEME_APP']}"
+    STATICFILES_DIRS += [join(THEME_PATH, 'static'), ]
+    TEMPLATES[1]['DIRS'].insert(0, join(THEME_PATH, 'jinja2'))
 
 # Location of Media and Static Files
 MEDIA_ROOT = '/srv/www/media'

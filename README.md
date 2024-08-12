@@ -23,7 +23,12 @@ Inside a directory of your choice clone the required repositories
 ```
 git clone git@github.com:inyokaproject/docker-setup.git . # take note of the '.'
 git clone git@github.com:inyokaproject/inyoka.git
-git clone git@github.com:inyokaproject/theme-ubuntuusers.git
+```
+
+If you want to use an own theme, clone it also:
+
+```
+git clone git@github.com:inyokaproject/theme-example.git ./theme
 ```
 
 Review configuration files
@@ -46,8 +51,8 @@ Otherwise, executed inside the docker-setup directory the script to build the In
 ./build_docker_images.sh
 ```
 
- - Add the option `--production` to tag the images for production environments. By default, they will be tagged for staging.
-
+ - To tag the images for production environments Add the option `--production`. By default, they will be tagged for staging.
+ - If you want to use an own theme, add `--theme`.
 
 Create docker secrets
 ---------------------
