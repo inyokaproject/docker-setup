@@ -51,7 +51,7 @@ STATIC_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-static-domain" }}/'
 ALLOWED_HOSTS = [SESSION_COOKIE_DOMAIN]
 
 # Mail Setup
-SERVER_EMAIL = 'server-%s@ubuntuusers.de' % socket.gethostname().split('.')[0]
+SERVER_EMAIL = f'server-{socket.gethostname().split('.')[0]}@{BASE_DOMAIN_NAME}'
 EMAIL_HOST = 'mail.ubuntu-de.org' ## TODO
 DEFAULT_EMAIL_FROM = '@'.join(['no-reply', BASE_DOMAIN_NAME])
 EMAIL_SUBJECT_PREFIX = f'{BASE_DOMAIN_NAME}: '
