@@ -58,7 +58,7 @@ services:
     command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 24 --max-requests 500 inyoka.wsgi:application
 
   redis:
-    image: docker.io/library/redis:7.2.5-alpine
+    image: docker.io/library/redis:7.2.6-alpine
     command: redis-server /etc/redis/redis.conf
     configs:
      - source: redis-config
