@@ -23,7 +23,12 @@ Inside a directory of your choice clone the required repositories
 ```
 git clone git@github.com:inyokaproject/docker-setup.git . # take note of the '.'
 git clone git@github.com:inyokaproject/inyoka.git
-git clone git@github.com:inyokaproject/theme-ubuntuusers.git
+```
+
+If you want to use an own theme, clone it also:
+
+```
+git clone git@github.com:inyokaproject/theme-example.git ./theme
 ```
 
 Review configuration files
@@ -31,8 +36,14 @@ Review configuration files
 
 Inyoka uses multiple components like a postgreSQL database or a cache.
 
-Especially for production environments, review the prepared configuration files, if everything fits your needs
-(f.e. whether the maximum cache sizes fits to the server's amount of RAM).
+Especially for production environments, review the prepared configuration files, if everything fits your needs.
+Some examples:
+ - Whether the maximum redis cache sizes fits to the server's amount of RAM.
+ - Whether memory settings of postgreSQL fit to the server's amount of RAM.
+ - In `production_settings.py`
+   - `EMAIL_HOST` points to the right host, if you want to send mails.
+   - Your preferred language is the default.
+   - ...
 
 
 Build container images
@@ -46,8 +57,8 @@ Otherwise, executed inside the docker-setup directory the script to build the In
 ./build_docker_images.sh
 ```
 
- - Add the option `--production` to tag the images for production environments. By default, they will be tagged for staging.
-
+ - To tag the images for production environments Add the option `--production`. By default, they will be tagged for staging.
+ - If you want to use an own theme, add `--theme`.
 
 Create docker secrets
 ---------------------
@@ -62,7 +73,7 @@ Some services need secrets. An example script for development is provided.
    - Adjust the email (used by caddy for ACME)
    - Run the customized script `./production_set_secrets.sh`
 
-(As an alternative consider to setup the secrets via ansible's [community.docker.docker_secret](https://docs.ansible.com/ansible/latest/collections/community/docker/docker_secret_module.html))
+(As an alternative consider to set up the secrets via ansible's [community.docker.docker_secret](https://docs.ansible.com/ansible/latest/collections/community/docker/docker_secret_module.html))
 
 
 Development: Adjust the user/group ids
