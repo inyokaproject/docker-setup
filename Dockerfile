@@ -1,4 +1,7 @@
-FROM docker.io/library/python:3.12.4-slim-bookworm AS inyoka_base
+# global build arguments → https://docs.docker.com/build/building/variables/#scoping
+ARG INYOKA_THEME_APP=inyoka_theme_ubuntuusers
+
+FROM docker.io/library/python:3.12.7-slim-bookworm AS inyoka_base
 
 LABEL org.opencontainers.image.source=https://github.com/inyokaproject/docker-setup
 LABEL org.opencontainers.image.description="Inyoka container image"
@@ -23,36 +26,8 @@ RUN /inyoka/venv/bin/pip install --no-cache-dir --upgrade pip
 RUN /inyoka/venv/bin/pip install --no-deps --require-hashes --no-cache-dir -r extra/requirements/production.txt
 RUN /inyoka/venv/bin/pip install -e /inyoka/code
 
-# theme
-COPY theme-ubuntuusers /inyoka/theme
-RUN /inyoka/venv/bin/pip install -e /inyoka/theme
-
 # remove previously collected statics (could be also symlinks)
 RUN rm -rf /inyoka/code/inyoka/static-collected
-
-
-
-# only install node packages in an intermediate container
-# the build statics will be copied in the next step
-# for Docker multistage-build see https://docs.docker.com/develop/develop-images/multistage-build/
-FROM inyoka_base AS inyoka_with_node
-
-ARG INYOKA_THEME=inyoka_theme_ubuntuusers
-
-WORKDIR /inyoka/theme
-RUN apt-get install -y --no-install-recommends nodejs npm
-RUN npm ci
-RUN npm run all
-
-WORKDIR /inyoka/code
-# create small temporary development settings file, so collectstatic can run
-RUN printf "from inyoka.default_settings import *\nINSTALLED_APPS += ('${INYOKA_THEME}',)" > development_settings.py
-RUN /inyoka/venv/bin/python manage.py collectstatic --noinput
-
-
-
-FROM inyoka_base AS inyoka_with_statics
-COPY --from=inyoka_with_node /inyoka/code/inyoka/static-collected /inyoka/code/inyoka/static-collected/
 
 # setup own inyoka user instead of root
 RUN touch /inyoka/code/celery.log /inyoka/code/inyoka.log
@@ -60,4 +35,65 @@ RUN mkdir -p /volume/celerybeat-schedule/ /srv/www/media
 RUN groupadd --gid 998 --system inyoka
 RUN useradd --system --no-create-home --no-log-init --gid inyoka --groups inyoka --uid 998 inyoka
 RUN chown inyoka:inyoka /inyoka/code/celery.log /inyoka/code/inyoka.log /volume/celerybeat-schedule/ /srv/www/media
+
+
+FROM inyoka_base AS inyoka_base_theme
+
+# theme
+COPY theme /inyoka/theme
+RUN /inyoka/venv/bin/pip install -e /inyoka/theme
+
+
+# only install node packages in an intermediate container
+# the build statics will be copied in the next step
+# for Docker multistage-build see https://docs.docker.com/develop/develop-images/multistage-build/
+FROM inyoka_base AS inyoka_with_node
+
+RUN apt-get install -y --no-install-recommends nodejs npm
+
+# build statics inside Inyoka
+RUN npm ci
+RUN npm run all
+
+FROM inyoka_with_node AS inyoka_collected
+ARG DJANGO_SETTINGS_MODULE="tests.settings.base"
+RUN /inyoka/venv/bin/python manage.py collectstatic --noinput
+
+FROM inyoka_with_node AS inyoka_theme_with_node
+
+COPY --from=inyoka_base_theme /inyoka/theme /inyoka/theme/
+COPY --from=inyoka_base_theme /inyoka/venv /inyoka/venv/
+
+ARG INYOKA_THEME_APP
+
+# build statics theme
+WORKDIR /inyoka/theme
+RUN npm ci
+RUN npm run all
+
+WORKDIR /inyoka/code
+# minimal development settings, so collectstatic allows overwrites
+COPY <<EOF development_settings.py
+from inyoka.default_settings import *
+INSTALLED_APPS += ('${INYOKA_THEME_APP}',)
+
+from os.path import join
+THEME_PATH = '/inyoka/theme/${INYOKA_THEME_APP}'
+STATICFILES_DIRS = [join(THEME_PATH, 'static'), ] + STATICFILES_DIRS
+#TEMPLATES[1]['DIRS'].insert(0, join(THEME_PATH, 'jinja2'))
+EOF
+RUN /inyoka/venv/bin/python manage.py collectstatic --noinput
+
+
+FROM inyoka_base AS inyoka
+COPY --from=inyoka_collected /inyoka/code/inyoka/static-collected /inyoka/code/inyoka/static-collected/
+# use own inyoka user instead of root
+USER inyoka
+
+
+FROM inyoka_base_theme AS inyoka_custom_theme
+ARG INYOKA_THEME_APP
+ENV INYOKA_THEME_APP=$INYOKA_THEME_APP
+COPY --from=inyoka_theme_with_node /inyoka/code/inyoka/static-collected /inyoka/code/inyoka/static-collected/
+# use own inyoka user instead of root
 USER inyoka
