@@ -100,7 +100,7 @@ jobs:
           ${{ env.REGISTRY }}/ubuntuusers/caddy-inyoka:${{ env.INYOKA_TAG }}
         file: Dockerfile_caddy
         push: true
-        build-contexts: inyokaproject=docker-image://localhost:5000/inyokaproject:${{ env.INYOKA_VERSION }}
+        build-contexts: git.ubuntu-eu.org/ubuntuusers/inyokaproject=docker-image://localhost:5000/inyokaproject:${{ env.INYOKA_VERSION }}
 
     - name: Image digests
       run: |
