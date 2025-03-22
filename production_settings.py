@@ -38,8 +38,8 @@ DEBUG = TEMPLATE_DEBUG = DATABASE_DEBUG = False
 
 # Cache Setup
 CACHE_PREFIX = 'inyoka/'
-CACHES['default']['LOCATION'] = 'redis://redis:6379/1'
-CACHES['content']['LOCATION'] = 'redis://redis:6379/0'
+CACHES['default']['LOCATION'] = 'redis://valkey:6379/1'
+CACHES['content']['LOCATION'] = 'redis://valkey:6379/0'
 CACHES['default']['OPTIONS']['PASSWORD'] = CACHES['content']['OPTIONS']['PASSWORD'] = '{{ secret "inyoka-redis-password" }}'
 
 # URL Setup
@@ -101,8 +101,8 @@ sentry_sdk.init(
 
 
 # Celery Setup
-redis_password_quoted = urllib.parse.quote('{{ secret "inyoka-redis-password" }}', safe='')
-CELERY_BROKER_URL = CELERY_RESULT_BACKEND = f'redis://:{redis_password_quoted}@redis:6379/2'
+valkey_password_quoted = urllib.parse.quote('{{ secret "inyoka-redis-password" }}', safe='')
+CELERY_BROKER_URL = CELERY_RESULT_BACKEND = f'redis://:{valkey_password_quoted}@valkey:6379/2'
 
 # HTTPS Setup
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

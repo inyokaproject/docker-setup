@@ -57,19 +57,19 @@ services:
     << : *default-django
     command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 24 --max-requests 500 inyoka.wsgi:application
 
-  redis:
-    image: docker.io/library/redis:7.2.7-alpine
-    command: redis-server /etc/redis/redis.conf
+  valkey:
+    image: docker.io/valkey/valkey:7.2.8-alpine
+    command: valkey-server /usr/local/etc/valkey/valkey.conf
     configs:
-     - source: redis-config
-       target: /etc/redis/redis.conf
-       uid: "999" # see `id redis` inside the redis container
+     - source: valkey-config
+       target: /usr/local/etc/valkey/valkey.conf
+       uid: "999" # see `id valkey` inside the redis container
        gid: "1000"
        mode: 0440
     secrets:
       - inyoka-redis-password
     volumes:
-      - redis-data:/data
+      - valkey-data:/data
 
   celeryworker:
     << : *default-django
@@ -103,8 +103,8 @@ configs:
   postgres-config:
     file: ./postgres.conf
     template_driver: golang
-  redis-config:
-    file: ./redis.conf
+  valkey-config:
+    file: ./valkey.conf
     template_driver: golang
   Caddyfile:
     file: ./Caddyfile
@@ -137,7 +137,7 @@ secrets:
 volumes:
   celerybeat-schedule: {}
   postgres-data: {}
-  redis-data: {}
+  valkey-data: {}
   media-files: {}
   caddy_data: {}
   caddy_config: {}

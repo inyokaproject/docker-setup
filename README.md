@@ -38,7 +38,7 @@ Inyoka uses multiple components like a postgreSQL database or a cache.
 
 Especially for production environments, review the prepared configuration files, if everything fits your needs.
 Some examples:
- - Whether the maximum redis cache sizes fits to the server's amount of RAM.
+ - Whether the maximum cache sizes fits to the server's amount of RAM.
  - Whether memory settings of postgreSQL fit to the server's amount of RAM.
  - In `production_settings.py`
    - `EMAIL_HOST` points to the right host, if you want to send mails.
@@ -251,5 +251,5 @@ A list of links to the release page of used components (and their RSS-feeds).
  * [Alpine releases](https://alpinelinux.org/releases/)
  * [Caddy releases](https://github.com/caddyserver/caddy/releases) ([Feed](https://github.com/caddyserver/caddy/releases.atom))
  * [Python releases](https://www.python.org/downloads/) ([Feed](https://github.com/python/cpython/releases.atom))
- * [Redis releases](https://github.com/redis/redis/releases) ([Feed](https://github.com/redis/redis/releases.atom))
+ * [Valkey releases](https://github.com/valkey-io/valkey/releases) ([Feed](https://github.com/valkey-io/valkey/releases.atom))
  * [Supported postgreSQL releases](https://www.postgresql.org/support/versioning/) ([Feed](https://www.postgresql.org/news/pgsql.rss))
