@@ -9,7 +9,7 @@ x-dev-django:
     - source: inyoka-dev-config
       target: /inyoka/code/development_settings.py
   volumes:
-    - ./theme-ubuntuusers:/inyoka/theme
+    - ./theme:/inyoka/theme
     - ./inyoka:/inyoka/code
 
 x-dev-env:
@@ -73,7 +73,7 @@ services:
       npm install &&
       setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups npm run watch"
     volumes:
-      - ./theme-ubuntuusers:/inyoka/theme
+      - ./theme:/inyoka/theme
 
   copy_statics:
     << : *dev-django
@@ -87,7 +87,7 @@ services:
       chown $$INYOKA_UID:$$INYOKA_GID inyoka.log celery.log &&
       setpriv --reuid=$$INYOKA_UID --regid=$$INYOKA_GID --clear-groups bash -c 'while true; do /inyoka/venv/bin/python manage.py collectstatic --noinput --clear; inotifywait --quiet --recursive --event modify /inyoka/theme/inyoka_theme_ubuntuusers/static/; done'"
     volumes:
-      - ./theme-ubuntuusers:/inyoka/theme:ro
+      - ./theme:/inyoka/theme:ro
       - ./inyoka/inyoka/static-collected:/inyoka/code/inyoka/static-collected
     configs:
       - source: inyoka-config
