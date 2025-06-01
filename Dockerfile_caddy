@@ -1,4 +1,4 @@
-FROM docker.io/library/caddy:2.9.1-alpine
+FROM docker.io/library/caddy:2.10.0-alpine
 
 LABEL org.opencontainers.image.source=https://github.com/inyokaproject/docker-setup
 LABEL org.opencontainers.image.title="Caddy (customized for Inyoka)"
