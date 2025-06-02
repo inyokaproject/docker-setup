@@ -120,3 +120,8 @@ www.{{ config "inyoka-media-domain" }} {
 	redir https://{{ config "inyoka-media-domain" }}{uri}
 	import common
 }
+
+# used for docker health check
+http://localhost:2024 {
+	respond "caddy works"
+}
