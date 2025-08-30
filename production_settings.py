@@ -98,7 +98,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 sentry_sdk.init(
     dsn='{{ secret "inyoka-sentry-dsn" }}',
     integrations=[DjangoIntegration(),CeleryIntegration()],
-    traces_sample_rate=1.0,
+    traces_sample_rate=0,
     release=INYOKA_VERSION,
     environment='production',
 )
