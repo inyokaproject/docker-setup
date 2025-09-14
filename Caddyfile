@@ -95,3 +95,8 @@ http://{{ config "inyoka-static-domain" }}:8080 {
 }
 
 # www removal redirects are already done on first proxy
+
+# used for docker health check
+http://localhost:2024 {
+	respond "caddy works"
+}
