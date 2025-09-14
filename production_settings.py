@@ -48,7 +48,7 @@ BASE_DOMAIN_NAME = '{{ config "inyoka-base-domain" }}'
 SESSION_COOKIE_DOMAIN = f'.{BASE_DOMAIN_NAME}'
 MEDIA_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-media-domain" }}/'
 STATIC_URL = f'{INYOKA_URI_SCHEME}://{{ config "inyoka-static-domain" }}/'
-ALLOWED_HOSTS = [SESSION_COOKIE_DOMAIN]
+ALLOWED_HOSTS = [SESSION_COOKIE_DOMAIN, 'localhost']
 
 # Mail Setup
 SERVER_EMAIL = f'server-{socket.gethostname().split('.')[0]}@{BASE_DOMAIN_NAME}'
