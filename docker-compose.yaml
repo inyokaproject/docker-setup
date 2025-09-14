@@ -19,13 +19,19 @@ x-django:
   volumes:
     - media-files:/srv/www/media
 
+x-healthcheck-defaults:
+  &healthcheck_defaults
+  # https://docs.docker.com/reference/dockerfile/#healthcheck
+  timeout: 1m
+  start_period: 10s
+
 
 services:
   postgres:
     # pin postgres major version to prevent unexpected database migrations
     # debian image is used, as alpine can have problems with locals
     # see https://github.com/docker-library/docs/blob/master/postgres/README.md#locale-customization
-    image: docker.io/library/postgres:14.18-bookworm
+    image: docker.io/library/postgres:14.19-bookworm
     environment:
       POSTGRES_DB: inyoka
       # TODO defines superuser name -> do not use superuser from inyoka?
@@ -51,14 +57,19 @@ services:
         target: /dev/shm
         tmpfs:
           size: 268435456
-
+    healthcheck:
+      <<: *healthcheck_defaults
+      test: ['CMD', 'pg_isready']
 
   inyoka-worker:
     << : *default-django
     command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 24 --max-requests 500 inyoka.wsgi:application
+    healthcheck:
+      <<: *healthcheck_defaults
+      test: python -c 'import http.client; conn = http.client.HTTPConnection("localhost", 8000); conn.request("GET", "/"); res = conn.getresponse(); assert len(res.read()) > 0'
 
   redis:
-    image: docker.io/library/redis:7.2.9-alpine
+    image: docker.io/library/redis:7.2.10-alpine
     command: redis-server /etc/redis/redis.conf
     configs:
      - source: redis-config
@@ -70,16 +81,25 @@ services:
       - inyoka-redis-password
     volumes:
       - redis-data:/data
+    healthcheck:
+      <<: *healthcheck_defaults
+      test: nc -z 127.0.0.1 6379
 
   celeryworker:
     << : *default-django
     command: /inyoka/venv/bin/celery --app=inyoka worker --loglevel=INFO --concurrency=8
+    healthcheck:
+      <<: *healthcheck_defaults
+      test: ['CMD-SHELL', 'cat /proc/1/cmdline | grep --text "celery" | grep --text "worker" || false']
 
   celerybeat:
     << : *default-django
     command: /inyoka/venv/bin/celery --app=inyoka beat --pidfile /tmp/celerybeat.pid --loglevel=INFO --schedule /volume/celerybeat-schedule/celerybeat-schedule
     volumes:
       - celerybeat-schedule:/volume/celerybeat-schedule
+    healthcheck:
+      <<: *healthcheck_defaults
+      test: ['CMD-SHELL', 'cat /proc/1/cmdline | grep --text "celery" | grep --text "beat" || false']
 
   caddy:
     image: git.ubuntu-eu.org/ubuntuusers/caddy-inyoka:staging
@@ -94,7 +114,9 @@ services:
       - inyoka-base-domain
       - inyoka-media-domain
       - inyoka-static-domain
-
+    healthcheck:
+      <<: *healthcheck_defaults
+      test: ['CMD-SHELL', 'wget http://localhost:2024 -O - -o /dev/null']
 
 configs:
   inyoka-config:
