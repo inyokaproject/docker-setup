@@ -69,7 +69,7 @@ services:
       test: python -c 'import http.client; conn = http.client.HTTPConnection("localhost", 8000); conn.request("GET", "/"); res = conn.getresponse(); assert len(res.read()) > 0'
 
   redis:
-    image: docker.io/library/redis:7.2.11-alpine
+    image: docker.io/library/redis:7.2.12-alpine
     command: redis-server /etc/redis/redis.conf
     configs:
      - source: redis-config
