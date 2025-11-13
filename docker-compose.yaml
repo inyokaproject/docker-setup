@@ -31,7 +31,7 @@ services:
     # pin postgres major version to prevent unexpected database migrations
     # debian image is used, as alpine can have problems with locals
     # see https://github.com/docker-library/docs/blob/master/postgres/README.md#locale-customization
-    image: docker.io/library/postgres:14.19-bookworm
+    image: docker.io/library/postgres:14.20-bookworm
     environment:
       POSTGRES_DB: inyoka
       # TODO defines superuser name -> do not use superuser from inyoka?
