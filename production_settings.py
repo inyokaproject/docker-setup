@@ -95,10 +95,22 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 sentry_sdk.init(
     dsn='{{ secret "inyoka-sentry-dsn" }}',
-    integrations=[DjangoIntegration(),CeleryIntegration()],
+    integrations=[
+        DjangoIntegration(
+            middleware_spans=True,
+            signals_spans=True,
+            cache_spans=True,
+        ),
+        CeleryIntegration(
+            monitor_beat_tasks=True,
+        )
+    ],
     traces_sample_rate=1.0,
+    profile_session_sample_rate=1.0,
+    profile_lifecycle="trace",
     release=INYOKA_VERSION,
     environment='staging',
+    enable_logs=True,
 )
 
 
