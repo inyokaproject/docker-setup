@@ -118,9 +118,27 @@ services:
       <<: *healthcheck_defaults
       test: ['CMD-SHELL', 'wget http://localhost:2024 -O - -o /dev/null']
 
+  clamav:
+    image: clamav/clamav:1.5
+    user: clamav
+    entrypoint: /init-unprivileged
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 4GB
+    volumes:
+      - media-files:/srv/www/media:ro
+    configs:
+      - source: clamd-config
+        target: /etc/clamav/clamd.conf
+
 configs:
   inyoka-config:
     file: ./production_settings.py
+    template_driver: golang
+  clamd-config:
+    file: ./clamd.conf
     template_driver: golang
   postgres-config:
     file: ./postgres.conf
