@@ -1,7 +1,7 @@
 # global build arguments → https://docs.docker.com/build/building/variables/#scoping
 ARG INYOKA_THEME_APP=inyoka_theme_ubuntuusers
 
-FROM docker.io/library/python:3.13.12-slim-trixie AS inyoka_base
+FROM docker.io/library/python:3.14.3-slim-trixie AS inyoka_base
 
 LABEL org.opencontainers.image.source=https://github.com/inyokaproject/docker-setup
 LABEL org.opencontainers.image.description="Inyoka container image"
