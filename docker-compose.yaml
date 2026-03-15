@@ -31,7 +31,7 @@ services:
     # pin postgres major version to prevent unexpected database migrations
     # debian image is used, as alpine can have problems with locals
     # see https://github.com/docker-library/docs/blob/master/postgres/README.md#locale-customization
-    image: docker.io/library/postgres:14.20-trixie
+    image: docker.io/library/postgres:14.22-trixie
     environment:
       POSTGRES_DB: inyoka
       # TODO defines superuser name -> do not use superuser from inyoka?
@@ -69,7 +69,7 @@ services:
       test: python -c 'import http.client; conn = http.client.HTTPConnection("localhost", 8000); conn.request("GET", "/"); res = conn.getresponse(); assert len(res.read()) > 0'
 
   redis:
-    image: docker.io/library/redis:7.2.12-alpine
+    image: docker.io/library/redis:7.2.13-alpine
     command: redis-server /etc/redis/redis.conf
     configs:
      - source: redis-config
@@ -118,9 +118,27 @@ services:
       <<: *healthcheck_defaults
       test: ['CMD-SHELL', 'wget http://localhost:2024 -O - -o /dev/null']
 
+  clamav:
+    image: clamav/clamav:1.5
+    user: clamav
+    entrypoint: /init-unprivileged
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 4GB
+    volumes:
+      - media-files:/srv/www/media:ro
+    configs:
+      - source: clamd-config
+        target: /etc/clamav/clamd.conf
+
 configs:
   inyoka-config:
     file: ./production_settings.py
+    template_driver: golang
+  clamd-config:
+    file: ./clamd.conf
     template_driver: golang
   postgres-config:
     file: ./postgres.conf

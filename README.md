@@ -241,8 +241,10 @@ Other notes
    `docker stack config -c docker-compose.yaml -c docker-development.yml |& less`
  * Compare production and development stack config    
    `vimdiff <(docker stack config -c docker-compose.yaml) <(docker stack config -c docker-compose.yaml -c docker-development.yml)`
+ * How to check, if clamav works and what it does  
+   `clamdtop "/etc/clamav/sockets/clamd.sock"` or `clamdtop clamav`
 
-Componentes used
+Components used
 ----------------
 
 A list of links to the release page of used components (and their RSS-feeds).
@@ -250,6 +252,7 @@ A list of links to the release page of used components (and their RSS-feeds).
  * [Supported Debian releases](https://wiki.debian.org/DebianReleases#Production_Releases)
  * [Alpine releases](https://alpinelinux.org/releases/)
  * [Caddy releases](https://github.com/caddyserver/caddy/releases) ([Feed](https://github.com/caddyserver/caddy/releases.atom))
+ * [Clamav releases](https://www.clamav.net/downloads) ([Feed](https://github.com/Cisco-Talos/clamav/releases.atom))
  * [Python releases](https://www.python.org/downloads/) ([Feed](https://github.com/python/cpython/releases.atom))
  * [Redis releases](https://github.com/redis/redis/releases) ([Feed](https://github.com/redis/redis/releases.atom))
  * [Supported postgreSQL releases](https://www.postgresql.org/support/versioning/) ([Feed](https://www.postgresql.org/news/pgsql.rss))
