@@ -63,7 +63,7 @@ services:
 
   inyoka-worker:
     << : *default-django
-    command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 24 --max-requests 500 inyoka.wsgi:application
+    command: /inyoka/venv/bin/gunicorn -b 0.0.0.0:8000 --workers 24 --max-requests 500 --no-control-socket inyoka.wsgi:application
     healthcheck:
       <<: *healthcheck_defaults
       test: python -c 'import http.client; conn = http.client.HTTPConnection("localhost", 8000); conn.request("GET", "/"); res = conn.getresponse(); assert len(res.read()) > 0'
