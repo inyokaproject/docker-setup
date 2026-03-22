@@ -1,7 +1,7 @@
 # global build arguments → https://docs.docker.com/build/building/variables/#scoping
 ARG INYOKA_THEME_APP=inyoka_theme_ubuntuusers
 
-FROM docker.io/library/python:3.13.12-slim-trixie AS inyoka_base
+FROM docker.io/library/python:3.14.3-slim-trixie AS inyoka_base
 
 LABEL org.opencontainers.image.source=https://github.com/inyokaproject/docker-setup
 LABEL org.opencontainers.image.description="Inyoka container image"
@@ -16,7 +16,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends libxml2-dev libxslt1-dev zlib1g-dev libjpeg-dev uuid-dev libfreetype6-dev libpq-dev build-essential libpq-dev libffi-dev libmagic1 postgresql-client
+RUN apt-get install -y --no-install-recommends libmagic1 postgresql-client
 
 # inyoka
 COPY inyoka /inyoka/code
