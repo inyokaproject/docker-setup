@@ -7,3 +7,8 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+  - package-ecosystem: "docker-compose"
+    directories:
+      -  "/docker-*.yml"
+    schedule:
+      interval: "monthly"
