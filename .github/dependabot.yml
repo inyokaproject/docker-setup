@@ -5,5 +5,14 @@ version: 2
 updates:
   - package-ecosystem: "docker"
     directory: "/"
+    pull-request-branch-name:
+      separator: "_"
     schedule:
-      interval: "daily"
+      interval: "monthly"
+  - package-ecosystem: "docker-compose"
+    directories:
+      -  "/"
+    pull-request-branch-name:
+      separator: "_"
+    schedule:
+      interval: "monthly"
