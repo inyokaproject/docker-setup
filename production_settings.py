@@ -92,6 +92,7 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 7 * 4
 import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
 
 sentry_sdk.init(
     dsn='{{ secret "inyoka-sentry-dsn" }}',
@@ -103,14 +104,16 @@ sentry_sdk.init(
         ),
         CeleryIntegration(
             monitor_beat_tasks=True,
-        )
+        ),
+        LoggingIntegration(
+            capture_sentry_logs=True,
+        ),
     ],
     traces_sample_rate=1.0,
     profile_session_sample_rate=1.0,
     profile_lifecycle="trace",
     release=INYOKA_VERSION,
     environment='staging',
-    enable_logs=True,
 )
 
 
