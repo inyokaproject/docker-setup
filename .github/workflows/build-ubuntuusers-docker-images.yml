@@ -91,7 +91,7 @@ jobs:
         push: true
 
     - name: Build customized caddy image and push to own container registry
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v7
       id: docker_build_caddy
       with:
         context: .
