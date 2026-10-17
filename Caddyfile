@@ -78,8 +78,18 @@ http://{{ config "inyoka-media-domain" }}:8080 {
 		not path /linkmap/*
 		not path /favicon.ico
 		not path /robots.txt
+		not path *.avif
+		not path *.gif
+		not path *.jpg
+		not path *.jpeg
+		not path *.pdf
+		not path *.png
+		not path *.txt
+		not path *.webp
+
 	}
 	header @exclude Content-Type application/octet-stream
+	header @exclude Content-Disposition attachment # force download
 }
 
 http://{{ config "inyoka-static-domain" }}:8080 {
